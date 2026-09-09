@@ -1,0 +1,23 @@
+# Normalise line endings so the repo is identical on Windows, macOS and Linux
+# and diffs stay clean across the team.
+* text=auto eol=lf
+
+# Scripts that must keep LF to run.
+*.sh text eol=lf
+
+# Windows-only scripts.
+*.ps1 text eol=crlf
+
+# Never touched by the eol filters.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ttf binary
+*.otf binary
+*.jks binary
+*.keystore binary
+
+# Generated Dart: collapse in review, and do not count towards language stats.
+*.g.dart linguist-generated=true
+*.freezed.dart linguist-generated=true

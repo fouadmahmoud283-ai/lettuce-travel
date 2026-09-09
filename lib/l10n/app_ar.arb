@@ -1,0 +1,86 @@
+{
+  "@@locale": "ar",
+
+  "appName": "لتس ترافل",
+
+  "signIn": "تسجيل الدخول",
+  "phoneNumber": "رقم الهاتف",
+  "sendCode": "إرسال الرمز",
+  "verificationCode": "رمز التحقق",
+  "verify": "تحقق",
+  "resendCode": "إعادة إرسال الرمز",
+  "adminSignIn": "دخول المسؤول",
+  "signOut": "تسجيل الخروج",
+
+  "roleSuperAdmin": "مسؤول النظام",
+  "roleSupervisor": "مشرف الحافلة",
+  "roleParent": "ولي الأمر",
+
+  "myTrips": "رحلاتي",
+  "morningPickup": "رحلة الصباح",
+  "afternoonDropoff": "رحلة العودة",
+  "startTrip": "بدء الرحلة",
+  "endTrip": "إنهاء الرحلة",
+  "tripInProgress": "الرحلة جارية",
+  "roster": "قائمة الأطفال",
+
+  "statusPending": "في الانتظار",
+  "statusOnBoard": "داخل الحافلة",
+  "statusDroppedOff": "تم التسليم",
+  "statusAbsent": "غائب",
+  "statusNoShow": "لم يحضر",
+
+  "checkIn": "صعد الحافلة",
+  "checkOut": "تم التسليم",
+  "markNoShow": "لم يحضر",
+  "undo": "تراجع",
+
+  "countWaiting": "في الانتظار: {count}",
+  "@countWaiting": { "placeholders": { "count": { "type": "int" } } },
+  "countOnBoard": "داخل الحافلة: {count}",
+  "@countOnBoard": { "placeholders": { "count": { "type": "int" } } },
+  "countDroppedOff": "تم التسليم: {count}",
+  "@countDroppedOff": { "placeholders": { "count": { "type": "int" } } },
+
+  "myChildren": "أبنائي",
+  "liveMap": "الخريطة المباشرة",
+  "rideHistory": "سجل الرحلات",
+  "reportAbsence": "الإبلاغ عن غياب",
+  "busApproaching": "الحافلة تقترب من موقفك",
+  "lastUpdated": "آخر تحديث {time}",
+  "@lastUpdated": { "placeholders": { "time": { "type": "String" } } },
+  "locationStale": "الموقع غير محدّث",
+
+  "notifPickedUpTitle": "{name} داخل الحافلة",
+  "@notifPickedUpTitle": { "placeholders": { "name": { "type": "String" } } },
+  "notifPickedUpBody": "تم الصعود الساعة {time} من {stop}",
+  "@notifPickedUpBody": { "placeholders": { "time": { "type": "String" }, "stop": { "type": "String" } } },
+  "notifDroppedOffTitle": "تم تسليم {name}",
+  "@notifDroppedOffTitle": { "placeholders": { "name": { "type": "String" } } },
+  "notifDroppedOffBody": "تم التسليم الساعة {time} عند {stop}",
+  "@notifDroppedOffBody": { "placeholders": { "time": { "type": "String" }, "stop": { "type": "String" } } },
+
+  "sos": "طوارئ",
+  "incidentBreakdown": "عطل",
+  "incidentAccident": "حادث",
+  "incidentMedical": "حالة طبية",
+  "incidentDelay": "تأخير",
+  "incidentOther": "أخرى",
+
+  "pendingSync": "{count} عملية بانتظار المزامنة",
+  "@pendingSync": { "placeholders": { "count": { "type": "int" } } },
+  "offlineBanner": "لا يوجد اتصال. يتم حفظ العمليات على الجهاز.",
+
+  "errorNoConnection": "لا يوجد اتصال بالإنترنت.",
+  "errorNotAllowed": "ليس لديك صلاحية للقيام بذلك.",
+  "errorNotFound": "غير موجود.",
+  "errorInvalidAttendanceTransition": "لم يتم تسجيل صعود هذا الطفل بعد.",
+  "errorUnexpected": "حدث خطأ ما. حاول مرة أخرى.",
+  "errorLocationPermission": "إذن الموقع مطلوب لتشغيل الرحلة.",
+
+  "cancel": "إلغاء",
+  "confirm": "تأكيد",
+  "save": "حفظ",
+  "retry": "إعادة المحاولة",
+  "language": "اللغة"
+}

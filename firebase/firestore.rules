@@ -1,0 +1,160 @@
+rules_version = '2';
+
+// Contract with docs/data-model.md. Change both together.
+//
+// Two ideas carry most of the weight here:
+//   1. schoolId is the tenant boundary — every read is scoped to it.
+//   2. guardianIds on a document is the parent authorisation key — a parent
+//      reads a document only when their uid is inside it.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // role and schoolId are mirrored into custom claims by a Cloud Function,
+    // so these checks cost no document reads.
+    function role() {
+      return request.auth.token.role;
+    }
+
+    function schoolId() {
+      return request.auth.token.schoolId;
+    }
+
+    function isAdmin() {
+      return signedIn() && role() == 'superAdmin';
+    }
+
+    function isSupervisor() {
+      return signedIn() && role() == 'busSupervisor';
+    }
+
+    function isParent() {
+      return signedIn() && role() == 'parent';
+    }
+
+    function sameSchool(resourceSchoolId) {
+      return signedIn() && schoolId() == resourceSchoolId;
+    }
+
+    function isGuardianOf(guardianIds) {
+      return signedIn() && request.auth.uid in guardianIds;
+    }
+
+    // --- Users -------------------------------------------------------------
+    // A user reads their own record. Only an admin (or a Cloud Function via the
+    // Admin SDK, which bypasses rules) may create one or change a role.
+    match /users/{userId} {
+      allow read: if signedIn() && (request.auth.uid == userId || isAdmin());
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin()
+        || (request.auth.uid == userId
+            && request.resource.data.diff(resource.data).affectedKeys()
+                 .hasOnly(['fcmTokens', 'locale', 'displayName', 'updatedAt']));
+    }
+
+    // --- Configuration: schools, buses, routes ------------------------------
+    // Readable by anyone inside the school (a parent needs stop names and
+    // coordinates for the map); writable only by an admin.
+    match /schools/{schoolId} {
+      allow read: if sameSchool(schoolId);
+      allow write: if isAdmin();
+    }
+
+    match /buses/{busId} {
+      allow read: if sameSchool(resource.data.schoolId);
+      allow write: if isAdmin();
+    }
+
+    match /routes/{routeId} {
+      allow read: if sameSchool(resource.data.schoolId);
+      allow write: if isAdmin();
+    }
+
+    // --- Students -----------------------------------------------------------
+    // A parent sees only their own children. A supervisor sees students on a
+    // route they are assigned to; the client must still scope the query.
+    match /students/{studentId} {
+      allow read: if isAdmin()
+        || isGuardianOf(resource.data.guardianIds)
+        || (isSupervisor() && sameSchool(resource.data.schoolId));
+      allow write: if isAdmin();
+    }
+
+    // --- Trips --------------------------------------------------------------
+    match /trips/{tripId} {
+      allow read: if sameSchool(resource.data.schoolId);
+      allow create, update: if isAdmin()
+        || (isSupervisor() && request.resource.data.supervisorId == request.auth.uid);
+      allow delete: if false;  // trips are cancelled, never deleted
+    }
+
+    // --- Attendance: the custody ledger ------------------------------------
+    // Never deletable. Only the trip's supervisor or an admin may write, and a
+    // parent may read only their own child's records.
+    match /attendance/{recordId} {
+      allow read: if isAdmin()
+        || isGuardianOf(resource.data.guardianIds)
+        || (isSupervisor() && resource.data.recordedBy == request.auth.uid)
+        || (isSupervisor() && sameSchool(resource.data.schoolId));
+
+      allow create: if isAdmin()
+        || (isSupervisor() && sameSchool(request.resource.data.schoolId));
+
+      // Invariant 3: a drop-off requires a recorded boarding.
+      allow update: if (isAdmin() || isSupervisor())
+        && sameSchool(resource.data.schoolId)
+        && (request.resource.data.status != 'droppedOff'
+            || resource.data.boardedAtDevice != null);
+
+      allow delete: if false;
+    }
+
+    // --- Absences -----------------------------------------------------------
+    match /absences/{absenceId} {
+      allow read: if isAdmin()
+        || (isSupervisor() && sameSchool(resource.data.schoolId))
+        || (isParent() && resource.data.reportedBy == request.auth.uid);
+      allow create: if isParent() || isAdmin();
+      allow update, delete: if isAdmin()
+        || (isParent() && resource.data.reportedBy == request.auth.uid);
+    }
+
+    // --- Incidents ----------------------------------------------------------
+    match /incidents/{incidentId} {
+      allow read: if sameSchool(resource.data.schoolId);
+      allow create: if isSupervisor() || isAdmin();
+      allow update: if isAdmin();
+      allow delete: if false;
+    }
+
+    // --- Announcements and messages ----------------------------------------
+    match /announcements/{announcementId} {
+      allow read: if sameSchool(resource.data.schoolId);
+      allow write: if isAdmin();
+    }
+
+    match /threads/{threadId} {
+      allow read, update: if signedIn()
+        && request.auth.uid in resource.data.participantIds;
+      allow create: if signedIn();
+
+      match /messages/{messageId} {
+        allow read, create: if signedIn()
+          && request.auth.uid in
+             get(/databases/$(database)/documents/threads/$(threadId))
+               .data.participantIds;
+        allow update, delete: if false;
+      }
+    }
+
+    // --- Notification audit log --------------------------------------------
+    // Written by Cloud Functions only (Admin SDK bypasses rules).
+    match /notificationLogs/{logId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+  }
+}

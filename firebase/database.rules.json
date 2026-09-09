@@ -1,0 +1,16 @@
+{
+  "rules": {
+    "liveTrips": {
+      "$tripId": {
+        ".read": "auth != null && (root.child('liveTrips').child($tripId).child('meta').child('schoolId').val() === auth.token.schoolId)",
+        "meta": {
+          ".write": "auth != null && auth.token.role === 'busSupervisor' && newData.child('supervisorId').val() === auth.uid"
+        },
+        "location": {
+          ".write": "auth != null && auth.token.role === 'busSupervisor' && data.parent().child('meta').child('supervisorId').val() === auth.uid",
+          ".validate": "newData.hasChildren(['lat', 'lng', 'updatedAt'])"
+        }
+      }
+    }
+  }
+}

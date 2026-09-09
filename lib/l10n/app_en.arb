@@ -1,0 +1,86 @@
+{
+  "@@locale": "en",
+
+  "appName": "Lettuce Travel",
+
+  "signIn": "Sign in",
+  "phoneNumber": "Phone number",
+  "sendCode": "Send code",
+  "verificationCode": "Verification code",
+  "verify": "Verify",
+  "resendCode": "Resend code",
+  "adminSignIn": "Administrator sign in",
+  "signOut": "Sign out",
+
+  "roleSuperAdmin": "Administrator",
+  "roleSupervisor": "Bus supervisor",
+  "roleParent": "Parent",
+
+  "myTrips": "My trips",
+  "morningPickup": "Morning pickup",
+  "afternoonDropoff": "Afternoon drop-off",
+  "startTrip": "Start trip",
+  "endTrip": "End trip",
+  "tripInProgress": "Trip in progress",
+  "roster": "Roster",
+
+  "statusPending": "Waiting",
+  "statusOnBoard": "On the bus",
+  "statusDroppedOff": "Dropped off",
+  "statusAbsent": "Absent",
+  "statusNoShow": "Did not board",
+
+  "checkIn": "On board",
+  "checkOut": "Dropped off",
+  "markNoShow": "Did not board",
+  "undo": "Undo",
+
+  "countWaiting": "Waiting: {count}",
+  "@countWaiting": { "placeholders": { "count": { "type": "int" } } },
+  "countOnBoard": "On board: {count}",
+  "@countOnBoard": { "placeholders": { "count": { "type": "int" } } },
+  "countDroppedOff": "Dropped off: {count}",
+  "@countDroppedOff": { "placeholders": { "count": { "type": "int" } } },
+
+  "myChildren": "My children",
+  "liveMap": "Live map",
+  "rideHistory": "Ride history",
+  "reportAbsence": "Report an absence",
+  "busApproaching": "The bus is approaching your stop",
+  "lastUpdated": "Updated {time}",
+  "@lastUpdated": { "placeholders": { "time": { "type": "String" } } },
+  "locationStale": "Location is not up to date",
+
+  "notifPickedUpTitle": "{name} is on the bus",
+  "@notifPickedUpTitle": { "placeholders": { "name": { "type": "String" } } },
+  "notifPickedUpBody": "Picked up at {time} from {stop}",
+  "@notifPickedUpBody": { "placeholders": { "time": { "type": "String" }, "stop": { "type": "String" } } },
+  "notifDroppedOffTitle": "{name} has been dropped off",
+  "@notifDroppedOffTitle": { "placeholders": { "name": { "type": "String" } } },
+  "notifDroppedOffBody": "Dropped off at {time} at {stop}",
+  "@notifDroppedOffBody": { "placeholders": { "time": { "type": "String" }, "stop": { "type": "String" } } },
+
+  "sos": "Emergency",
+  "incidentBreakdown": "Breakdown",
+  "incidentAccident": "Accident",
+  "incidentMedical": "Medical",
+  "incidentDelay": "Delay",
+  "incidentOther": "Other",
+
+  "pendingSync": "{count} check-ins waiting to sync",
+  "@pendingSync": { "placeholders": { "count": { "type": "int" } } },
+  "offlineBanner": "No connection. Check-ins are saved on this device.",
+
+  "errorNoConnection": "No internet connection.",
+  "errorNotAllowed": "You do not have permission to do this.",
+  "errorNotFound": "Not found.",
+  "errorInvalidAttendanceTransition": "This child has not been marked on board yet.",
+  "errorUnexpected": "Something went wrong. Please try again.",
+  "errorLocationPermission": "Location permission is required to run a trip.",
+
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "save": "Save",
+  "retry": "Retry",
+  "language": "Language"
+}
