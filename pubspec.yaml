@@ -51,7 +51,7 @@ dependencies:
   permission_handler: ^11.3.1
 
   # --- UI ---
-  intl: ^0.19.0
+  intl: ^0.20.3
   cached_network_image: ^3.4.1
   flutter_svg: ^2.0.10+1
   shimmer: ^3.0.0
@@ -69,8 +69,8 @@ dev_dependencies:
   integration_test:
     sdk: flutter
   flutter_lints: ^4.0.0
-  custom_lint: ^0.6.7
-  riverpod_lint: ^2.3.13
+  custom_lint: ^0.7.3
+  riverpod_lint: ^2.6.3
   build_runner: ^2.4.13
   freezed: ^2.5.7
   json_serializable: ^6.8.0

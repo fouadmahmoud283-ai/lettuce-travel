@@ -20,12 +20,23 @@ claims, router redirect into the correct role shell, sign-out. Three empty role 
 **Done when** each role signs in and lands on its own navigation tree, and a parent cannot
 reach an admin route by any means.
 
+- [x] UI built against a `FakeAuthRepository` (phone-number heuristic: a number containing
+  "999" signs in as the demo supervisor, anything else as the demo parent; admin uses
+  `admin@lettuce.app` / `admin123`) — see `features/auth/data/repositories/fake_auth_repository.dart`
+- [ ] Real Firebase phone OTP, custom claims, and user-document creation
+
 ## M2 — Admin data management
 CRUD for schools, buses, routes with ordered stops (map picker), students, guardians and
 supervisors. Assignment of routes to buses and supervisors, and of students to routes and
 stops.
 
 **Done when** an admin can build a complete, valid school from an empty database.
+
+- [x] UI built: schools / buses / routes / students CRUD screens, staff (read-only), against
+  fake repositories seeded with one demo school
+- [ ] Map picker for stops (stops are seeded, shown read-only); guardian linking is a raw
+  guardian-id text field, not a real account lookup
+- [ ] Real Firestore-backed repositories
 
 ## M3 — Trips and the check-in ledger *(the core of the product)*
 Trip creation, supervisor's "today" list, start / end trip, roster ordered by stop, tap to
@@ -35,6 +46,13 @@ queue with replay preserving device timestamps.
 **Done when** a supervisor can run a full morning trip in airplane mode and every record
 arrives correctly on reconnect.
 
+- [x] UI and state machine built and wired to a fake `TripRepository` / `AttendanceRepository`:
+  start/resume/end trip, roster grouped and ordered by stop, tap-to-check-in/out, no-show with
+  confirmation, 60-second undo, absence greying, SOS/incident sheet
+- [ ] The real offline queue (`OfflineCheckInQueue`) is defined but not wired into the roster
+  screen yet — check-ins currently go straight to the (in-memory) repository
+- [ ] Real Firestore-backed repository, with the transactional roster-snapshot-on-start behaviour
+
 ## M4 — Live tracking
 Foreground-service GPS streaming while a trip is `inProgress`, RTDB writes throttled to 5s /
 20m, parent live map with bus marker and stop markers, and guaranteed stop of streaming on
@@ -42,6 +60,11 @@ trip end, logout, and app kill.
 
 **Done when** a parent watches the bus move, and the RTDB node disappears the moment the trip
 ends.
+
+- [x] UI built: a `FakeTrackingRepository` animates a bus along each route, start/stop wired to
+  trip start/end, and a custom-painted schematic map (not Google Maps — no platform folders or
+  API key yet) shows it live on the parent and admin live-trips screens
+- [ ] Real foreground-service GPS, `google_maps_flutter`, and RTDB writes
 
 ## M5 — Notifications
 FCM token registration per device, `onAttendanceWrite` picked-up and dropped-off notices,

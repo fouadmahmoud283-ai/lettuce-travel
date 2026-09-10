@@ -37,4 +37,21 @@ class BusRoute {
     }
     return null;
   }
+
+  BusRoute copyWith({
+    String? name,
+    String? busId,
+    String? supervisorId,
+    List<RouteStop>? stops,
+    bool? isActive,
+  }) =>
+      BusRoute(
+        id: id,
+        schoolId: schoolId,
+        name: name ?? this.name,
+        busId: busId ?? this.busId,
+        supervisorId: supervisorId ?? this.supervisorId,
+        stops: stops ?? this.stops,
+        isActive: isActive ?? this.isActive,
+      );
 }

@@ -3,14 +3,30 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:lettuce_travel/app/router/route_paths.dart';
+import 'package:lettuce_travel/features/admin/presentation/screens/admin_announcements_screen.dart';
+import 'package:lettuce_travel/features/admin/presentation/screens/admin_buses_screen.dart';
 import 'package:lettuce_travel/features/admin/presentation/screens/admin_home_screen.dart';
+import 'package:lettuce_travel/features/admin/presentation/screens/admin_incidents_screen.dart';
+import 'package:lettuce_travel/features/admin/presentation/screens/admin_live_trips_screen.dart';
+import 'package:lettuce_travel/features/admin/presentation/screens/admin_reports_screen.dart';
+import 'package:lettuce_travel/features/admin/presentation/screens/admin_routes_screen.dart';
+import 'package:lettuce_travel/features/admin/presentation/screens/admin_schools_screen.dart';
+import 'package:lettuce_travel/features/admin/presentation/screens/admin_staff_screen.dart';
+import 'package:lettuce_travel/features/admin/presentation/screens/admin_students_screen.dart';
 import 'package:lettuce_travel/features/auth/domain/entities/app_user.dart';
 import 'package:lettuce_travel/features/auth/domain/entities/user_role.dart';
 import 'package:lettuce_travel/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:lettuce_travel/features/auth/presentation/screens/admin_sign_in_screen.dart';
 import 'package:lettuce_travel/features/auth/presentation/screens/otp_verify_screen.dart';
 import 'package:lettuce_travel/features/auth/presentation/screens/phone_sign_in_screen.dart';
+import 'package:lettuce_travel/features/auth/presentation/screens/settings_screen.dart';
 import 'package:lettuce_travel/features/auth/presentation/screens/splash_screen.dart';
+import 'package:lettuce_travel/features/parent/presentation/screens/parent_absence_screen.dart';
+import 'package:lettuce_travel/features/parent/presentation/screens/parent_child_screen.dart';
+import 'package:lettuce_travel/features/parent/presentation/screens/parent_history_screen.dart';
 import 'package:lettuce_travel/features/parent/presentation/screens/parent_home_screen.dart';
+import 'package:lettuce_travel/features/parent/presentation/screens/parent_live_map_screen.dart';
+import 'package:lettuce_travel/features/parent/presentation/screens/parent_messages_screen.dart';
 import 'package:lettuce_travel/features/supervisor/presentation/screens/supervisor_home_screen.dart';
 import 'package:lettuce_travel/features/supervisor/presentation/screens/trip_roster_screen.dart';
 
@@ -71,12 +87,57 @@ final Provider<GoRouter> appRouterProvider = Provider<GoRouter>((Ref ref) {
           phoneNumber: state.uri.queryParameters['phone'] ?? '',
         ),
       ),
+      GoRoute(
+        path: RoutePaths.adminSignIn,
+        builder: (_, __) => const AdminSignInScreen(),
+      ),
+
+      // --- Shared, reachable from any signed-in role ---
+      GoRoute(
+        path: RoutePaths.settings,
+        builder: (_, __) => const SettingsScreen(),
+      ),
 
       // --- Super admin subtree ---
       GoRoute(
         path: RoutePaths.adminHome,
         builder: (_, __) => const AdminHomeScreen(),
-        // TODO(scaffold): nest schools / buses / routes / students / reports.
+      ),
+      GoRoute(
+        path: RoutePaths.adminSchools,
+        builder: (_, __) => const AdminSchoolsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.adminBuses,
+        builder: (_, __) => const AdminBusesScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.adminRoutes,
+        builder: (_, __) => const AdminRoutesScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.adminStudents,
+        builder: (_, __) => const AdminStudentsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.adminUsers,
+        builder: (_, __) => const AdminStaffScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.adminLiveTrips,
+        builder: (_, __) => const AdminLiveTripsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.adminReports,
+        builder: (_, __) => const AdminReportsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.adminIncidents,
+        builder: (_, __) => const AdminIncidentsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.adminAnnouncements,
+        builder: (_, __) => const AdminAnnouncementsScreen(),
       ),
 
       // --- Supervisor subtree ---
@@ -98,7 +159,34 @@ final Provider<GoRouter> appRouterProvider = Provider<GoRouter>((Ref ref) {
       GoRoute(
         path: RoutePaths.parentHome,
         builder: (_, __) => const ParentHomeScreen(),
-        // TODO(scaffold): nest child detail / live map / history / absence.
+        routes: <RouteBase>[
+          GoRoute(
+            path: 'child/:studentId',
+            builder: (BuildContext context, GoRouterState state) =>
+                ParentChildScreen(studentId: state.pathParameters['studentId']!),
+            routes: <RouteBase>[
+              GoRoute(
+                path: 'live',
+                builder: (BuildContext context, GoRouterState state) =>
+                    ParentLiveMapScreen(studentId: state.pathParameters['studentId']!),
+              ),
+              GoRoute(
+                path: 'history',
+                builder: (BuildContext context, GoRouterState state) =>
+                    ParentHistoryScreen(studentId: state.pathParameters['studentId']!),
+              ),
+              GoRoute(
+                path: 'absence',
+                builder: (BuildContext context, GoRouterState state) =>
+                    ParentAbsenceScreen(studentId: state.pathParameters['studentId']!),
+              ),
+            ],
+          ),
+          GoRoute(
+            path: 'messages',
+            builder: (_, __) => const ParentMessagesScreen(),
+          ),
+        ],
       ),
     ],
     errorBuilder: (BuildContext context, GoRouterState state) => Scaffold(

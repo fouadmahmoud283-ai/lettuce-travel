@@ -23,4 +23,23 @@ class Bus {
   final String? driverPhone;
 
   final bool isActive;
+
+  Bus copyWith({
+    String? plateNumber,
+    int? capacity,
+    String? model,
+    String? driverName,
+    String? driverPhone,
+    bool? isActive,
+  }) =>
+      Bus(
+        id: id,
+        schoolId: schoolId,
+        plateNumber: plateNumber ?? this.plateNumber,
+        capacity: capacity ?? this.capacity,
+        model: model ?? this.model,
+        driverName: driverName ?? this.driverName,
+        driverPhone: driverPhone ?? this.driverPhone,
+        isActive: isActive ?? this.isActive,
+      );
 }

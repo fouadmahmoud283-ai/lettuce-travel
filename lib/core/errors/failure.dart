@@ -45,6 +45,19 @@ class InvalidTransitionFailure extends Failure {
   final String to;
 }
 
+/// Raised when `endTrip` is called while a child is still marked on board.
+/// The UI should prevent this before it ever reaches the repository — see
+/// invariant 3 in AGENTS.md — this is the defence-in-depth backstop.
+class TripNotReadyToEndFailure extends Failure {
+  const TripNotReadyToEndFailure({required this.remainingOnBoard})
+      : super(
+          messageKey: 'errorTripNotEnded',
+          debugMessage: '$remainingOnBoard student(s) still on board',
+        );
+
+  final int remainingOnBoard;
+}
+
 class LocationFailure extends Failure {
   const LocationFailure({required super.messageKey, super.debugMessage});
 }

@@ -19,6 +19,12 @@ abstract interface class TripRepository {
   /// All in-progress trips for a school. Powers the admin live view.
   Stream<List<Trip>> watchActiveTrips(String schoolId);
 
+  /// The in-progress trip on one route, if any. Scoped to a single route (not
+  /// the whole school) so a parent-facing screen never has to over-fetch to
+  /// find out whether their child's bus is currently running — see invariant
+  /// 5 in AGENTS.md.
+  Stream<Trip?> watchActiveTripForRoute(String routeId);
+
   /// Creates the trip if it does not exist and marks it in progress.
   ///
   /// Snapshots the roster (students on the route, minus those with an absence

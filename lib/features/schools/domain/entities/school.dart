@@ -28,4 +28,26 @@ class School {
   final String? contactPhone;
   final String? logoUrl;
   final bool isActive;
+
+  School copyWith({
+    String? name,
+    String? nameAr,
+    String? address,
+    GeoPosition? location,
+    String? timezone,
+    String? contactPhone,
+    String? logoUrl,
+    bool? isActive,
+  }) =>
+      School(
+        id: id,
+        name: name ?? this.name,
+        nameAr: nameAr ?? this.nameAr,
+        address: address ?? this.address,
+        location: location ?? this.location,
+        timezone: timezone ?? this.timezone,
+        contactPhone: contactPhone ?? this.contactPhone,
+        logoUrl: logoUrl ?? this.logoUrl,
+        isActive: isActive ?? this.isActive,
+      );
 }

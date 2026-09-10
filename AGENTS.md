@@ -246,22 +246,45 @@ Platform folders (`android/`, `ios/`) are generated. See `tool/bootstrap.ps1`.
 
 ## 9. Current scaffold status
 
-This repository is a **scaffold**, not a working app.
+This repository has a **fully built UI for all three roles, backed by in-memory fake
+repositories** — not yet a working app against a real backend.
 
 Done:
 - Full folder architecture, lint rules, dependency set
 - Domain entities for every core concept, as plain Dart (compile without codegen)
-- Repository interfaces and Firestore collection constants
+- Repository interfaces for every feature, including `schools` (school / bus / route) and a new
+  `features/messaging/` (announcements + chat), which the original scaffold had left as entities
+  or folders without interfaces
+- `Fake*Repository` implementations (`features/*/data/repositories/fake_*_repository.dart`) —
+  in-memory, no Firebase, seeded from `lib/core/constants/mock_ids.dart` so the supervisor's
+  trip, the parent's children and the admin's roster all resolve to the same consistent mock
+  school. **Deliberately hand-written Riverpod providers, no `@riverpod` codegen** — the whole
+  UI compiles without `build_runner`, only `flutter pub get`
+- Full screens for all three roles: auth (phone OTP + admin email, both against the fake), the
+  supervisor trip roster (check-in / check-out / no-show / undo / end trip / SOS — the core
+  loop), the parent app (children, live status, a schematic live-map view, ride history, absence
+  reporting, announcements + messages), and the admin app (dashboard, schools / buses / routes /
+  students CRUD, staff, live trips, a date-range attendance report, incidents, announcements)
 - Firestore + Realtime Database security rules, and the composite index definitions
 - Unit tests for the custody state machine and the stop-geofence maths
-- Theme, routing skeleton with role guard, l10n setup (ar / en)
+- Theme, routing with role guard covering every new screen, l10n setup (ar / en) with the
+  `AppL10n` delegate wired into `MaterialApp.router` and every string added to both arb files
 - Documentation: PRD, data model, Firebase setup, roadmap
 
-Not done:
+Not done / known gaps:
 - Platform folders — run `tool/bootstrap.ps1` (needs the Flutter SDK, which is not installed
-  on this machine yet)
-- Generated files (`*.freezed.dart`, `*.g.dart`) — run `build_runner`
-- `lib/core/config/firebase_options.dart` — run `flutterfire configure`
-- Data sources, controllers, and most screens — marked `// TODO(scaffold):`
+  on this machine yet). **None of this has been compiled or run** — see the environment note in
+  CLAUDE.md
+- No Firebase project: every repository is the in-memory fake, not `FirebaseAuthRepository` /
+  `FirestoreXRepository` / etc. `lib/core/config/firebase_options.dart` — run `flutterfire
+  configure`
+- Real Google Maps (`google_maps_flutter`) — the live-tracking views use a custom-painted
+  schematic route diagram instead (`features/tracking/presentation/widgets/route_map_view.dart`),
+  clearly labelled as such, pending platform folders and an API key
+- The offline check-in queue (`OfflineCheckInQueue`) has no implementation wired into the roster
+  screen yet — check-ins go straight to the fake repository
+- No route-stop CRUD in the admin app (stops are seeded, shown read-only); no guardian-account
+  linking beyond typing a raw guardian id
+- Push notifications, FCM token registration, and Crashlytics are still stubs
 
 Read `docs/roadmap.md` for the intended build order.

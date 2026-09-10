@@ -53,4 +53,27 @@ class Student {
 
   static String _firstLetter(String value) =>
       value.isEmpty ? '' : value.substring(0, 1).toUpperCase();
+
+  Student copyWith({
+    String? fullName,
+    String? photoUrl,
+    String? gradeOrClass,
+    String? routeId,
+    String? stopId,
+    List<String>? guardianIds,
+    String? notes,
+    bool? isActive,
+  }) =>
+      Student(
+        id: id,
+        schoolId: schoolId,
+        fullName: fullName ?? this.fullName,
+        routeId: routeId ?? this.routeId,
+        stopId: stopId ?? this.stopId,
+        guardianIds: guardianIds ?? this.guardianIds,
+        photoUrl: photoUrl ?? this.photoUrl,
+        gradeOrClass: gradeOrClass ?? this.gradeOrClass,
+        notes: notes ?? this.notes,
+        isActive: isActive ?? this.isActive,
+      );
 }

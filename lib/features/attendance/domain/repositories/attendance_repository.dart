@@ -26,6 +26,14 @@ abstract interface class AttendanceRepository {
     required String toServiceDate,
   });
 
+  /// Every record for a school in a date range. Powers the admin attendance
+  /// report and its CSV export (FR-13 in docs/prd.md).
+  Stream<List<AttendanceRecord>> watchSchoolAttendance({
+    required String schoolId,
+    required String fromServiceDate,
+    required String toServiceDate,
+  });
+
   /// Marks a child on board. [tappedAt] is the device clock at the moment of
   /// the tap and must be preserved verbatim.
   Future<Result<AttendanceRecord>> checkIn({

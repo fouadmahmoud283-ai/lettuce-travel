@@ -1,6 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:lettuce_travel/core/utils/result.dart';
+import 'package:lettuce_travel/features/auth/data/repositories/fake_auth_repository.dart';
 import 'package:lettuce_travel/features/auth/domain/entities/app_user.dart';
+import 'package:lettuce_travel/features/auth/domain/repositories/auth_repository.dart';
 
 /// Session state consumed by the router guard.
 ///
@@ -41,16 +44,11 @@ class AuthState {
 }
 
 /// Owns the session.
-///
-/// TODO(scaffold): inject AuthRepository, subscribe to watchCurrentUser(), and
-/// implement sendOtp / verifyOtp / signOut. Until then the app boots signed out.
 class AuthController extends Notifier<AuthState> {
+  AuthRepository get _repository => ref.read(authRepositoryProvider);
+
   @override
-  AuthState build() {
-    // TODO(scaffold): replace with a subscription to
-    // ref.watch(authRepositoryProvider).watchCurrentUser().
-    return const AuthState(isResolving: false);
-  }
+  AuthState build() => const AuthState(isResolving: false);
 
   void setUser(AppUser? user) => state = user == null
       ? state.copyWith(clearUser: true, isResolving: false)
@@ -64,6 +62,45 @@ class AuthController extends Notifier<AuthState> {
         pendingVerificationId: verificationId,
         pendingPhoneNumber: phoneNumber,
       );
+
+  Future<Result<String>> sendOtp(String phoneNumber) async {
+    final Result<String> result = await _repository.sendOtp(phoneNumber);
+    result.when(
+      ok: (String verificationId) => setPendingVerification(
+        verificationId: verificationId,
+        phoneNumber: phoneNumber,
+      ),
+      err: (_) {},
+    );
+    return result;
+  }
+
+  Future<Result<AppUser>> verifyOtp(String smsCode) async {
+    final String verificationId = state.pendingVerificationId ?? '';
+    final Result<AppUser> result = await _repository.verifyOtp(
+      verificationId: verificationId,
+      smsCode: smsCode,
+    );
+    result.when(ok: setUser, err: (_) {});
+    return result;
+  }
+
+  Future<Result<AppUser>> signInAdmin({
+    required String email,
+    required String password,
+  }) async {
+    final Result<AppUser> result = await _repository.signInAdminWithEmail(
+      email: email,
+      password: password,
+    );
+    result.when(ok: setUser, err: (_) {});
+    return result;
+  }
+
+  Future<void> signOut() async {
+    await _repository.signOut();
+    setUser(null);
+  }
 }
 
 final NotifierProvider<AuthController, AuthState> authControllerProvider =
