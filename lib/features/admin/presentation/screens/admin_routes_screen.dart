@@ -23,7 +23,7 @@ class AdminRoutesScreen extends ConsumerWidget {
         child: AsyncValueView<List<BusRoute>>(
           value: routes,
           data: (List<BusRoute> items) => items.isEmpty
-              ? Center(child: Text(context.l10n.noData))
+              ? AppEmptyView(message: context.l10n.noData, icon: Icons.alt_route_rounded)
               : ListView.builder(
                   padding: const EdgeInsets.all(AppSpacing.md),
                   itemCount: items.length,
@@ -53,8 +53,17 @@ class _RouteCard extends ConsumerWidget {
     final AsyncValue<Bus?> bus = ref.watch(busByIdProvider(route.busId));
     return Card(
       child: ExpansionTile(
-        leading: const Icon(Icons.alt_route_rounded),
-        title: Text(route.name),
+        leading: DecoratedBox(
+          decoration: BoxDecoration(
+            color: context.colors.secondaryContainer,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.sm),
+            child: Icon(Icons.alt_route_rounded, color: context.colors.onSecondaryContainer),
+          ),
+        ),
+        title: Text(route.name, style: context.text.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
         subtitle: Text(
           '${bus.asData?.value?.plateNumber ?? '…'} · '
           '${MockIds.supervisorNames[route.supervisorId] ?? context.l10n.notSet} · '
@@ -65,6 +74,7 @@ class _RouteCard extends ConsumerWidget {
           onPressed: () => showModalBottomSheet<void>(
             context: context,
             isScrollControlled: true,
+            showDragHandle: true,
             builder: (_) => _RouteFormSheet(route: route),
           ),
         ),
@@ -72,7 +82,12 @@ class _RouteCard extends ConsumerWidget {
           for (final RouteStop stop in route.stopsInPickupOrder)
             ListTile(
               dense: true,
-              leading: CircleAvatar(radius: 12, child: Text('${stop.order}')),
+              leading: CircleAvatar(
+                radius: 14,
+                backgroundColor: context.colors.primaryContainer,
+                foregroundColor: context.colors.onPrimaryContainer,
+                child: Text('${stop.order}'),
+              ),
               title: Text(stop.name),
               subtitle: Text('${stop.expectedMorningTime ?? '--'} · ${stop.expectedAfternoonTime ?? '--'}'),
             ),

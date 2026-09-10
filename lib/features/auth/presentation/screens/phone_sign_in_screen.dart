@@ -8,6 +8,8 @@ import 'package:lettuce_travel/app/router/route_paths.dart';
 import 'package:lettuce_travel/app/theme/app_spacing.dart';
 import 'package:lettuce_travel/core/errors/failure_x.dart';
 import 'package:lettuce_travel/core/extensions/context_x.dart';
+import 'package:lettuce_travel/core/widgets/app_logo_mark.dart';
+import 'package:lettuce_travel/core/widgets/demo_hint_banner.dart';
 import 'package:lettuce_travel/features/auth/presentation/controllers/auth_controller.dart';
 
 /// Phone number entry for parents and supervisors.
@@ -44,67 +46,64 @@ class _PhoneSignInScreenState extends ConsumerState<PhoneSignInScreen> {
           ],
         ),
         body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                const SizedBox(height: AppSpacing.xxl),
-                Icon(
-                  Icons.directions_bus_filled_rounded,
-                  size: 64,
-                  color: context.colors.primary,
-                ),
-                const SizedBox(height: AppSpacing.md),
-                Text(
-                  context.l10n.welcomeTitle,
-                  style: context.text.headlineSmall,
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  context.l10n.welcomeSubtitle,
-                  style: context.text.bodyMedium
-                      ?.copyWith(color: context.colors.onSurfaceVariant),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: AppSpacing.xl),
-                TextField(
-                  controller: _phoneController,
-                  keyboardType: TextInputType.phone,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(11),
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 440),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    const Center(child: AppLogoMark(size: 76, onLight: true)),
+                    const SizedBox(height: AppSpacing.lg),
+                    Text(
+                      context.l10n.welcomeTitle,
+                      style: context.text.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      context.l10n.welcomeSubtitle,
+                      style: context.text.bodyMedium
+                          ?.copyWith(color: context.colors.onSurfaceVariant),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: AppSpacing.xl),
+                    TextField(
+                      controller: _phoneController,
+                      keyboardType: TextInputType.phone,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(11),
+                      ],
+                      decoration: InputDecoration(
+                        labelText: context.l10n.phoneNumber,
+                        hintText: context.l10n.phoneHint,
+                        prefixIcon: const Icon(Icons.phone_outlined),
+                        errorText: _errorText,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    DemoHintBanner(text: context.l10n.demoPhoneHint),
+                    const SizedBox(height: AppSpacing.lg),
+                    FilledButton(
+                      onPressed: _submitting ? null : _submit,
+                      child: _submitting
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : Text(context.l10n.sendCode),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    TextButton(
+                      onPressed: () => context.push(RoutePaths.adminSignIn),
+                      child: Text(context.l10n.adminSignIn),
+                    ),
                   ],
-                  decoration: InputDecoration(
-                    labelText: context.l10n.phoneNumber,
-                    hintText: context.l10n.phoneHint,
-                    prefixIcon: const Icon(Icons.phone_outlined),
-                    errorText: _errorText,
-                  ),
                 ),
-                const SizedBox(height: AppSpacing.md),
-                Text(
-                  context.l10n.demoPhoneHint,
-                  style: context.text.bodySmall
-                      ?.copyWith(color: context.colors.onSurfaceVariant),
-                ),
-                const SizedBox(height: AppSpacing.lg),
-                FilledButton(
-                  onPressed: _submitting ? null : _submit,
-                  child: _submitting
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : Text(context.l10n.sendCode),
-                ),
-                const SizedBox(height: AppSpacing.md),
-                TextButton(
-                  onPressed: () => context.push(RoutePaths.adminSignIn),
-                  child: Text(context.l10n.adminSignIn),
-                ),
-              ],
+              ),
             ),
           ),
         ),

@@ -32,33 +32,49 @@ class ParentChildScreen extends ConsumerWidget {
         child: AsyncValueView<Student?>(
           value: studentAsync,
           data: (Student? student) {
-            if (student == null) return Center(child: Text(context.l10n.noData));
+            if (student == null) return AppEmptyView(message: context.l10n.noData, icon: Icons.person_search_outlined);
             return ListView(
               padding: const EdgeInsets.all(AppSpacing.md),
               children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    ChildAvatar(
-                      initials: student.initials,
-                      photoUrl: student.photoUrl,
-                      size: 72,
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: context.colors.primaryContainer,
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppSpacing.lg),
+                    child: Row(
+                      children: <Widget>[
+                        ChildAvatar(
+                          initials: student.initials,
+                          photoUrl: student.photoUrl,
+                          size: 72,
+                        ),
+                        const SizedBox(width: AppSpacing.md),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                student.fullName,
+                                style: context.text.headlineSmall?.copyWith(
+                                  color: context.colors.onPrimaryContainer,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                              if (student.gradeOrClass.isNotEmpty)
+                                Text(
+                                  student.gradeOrClass,
+                                  style: context.text.bodyMedium?.copyWith(
+                                    color: context.colors.onPrimaryContainer.withValues(alpha: 0.78),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: AppSpacing.md),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(student.fullName, style: context.text.headlineSmall),
-                          if (student.gradeOrClass.isNotEmpty)
-                            Text(
-                              student.gradeOrClass,
-                              style: context.text.bodyMedium
-                                  ?.copyWith(color: context.colors.onSurfaceVariant),
-                            ),
-                        ],
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 SectionHeader(title: context.l10n.routeLabel),
@@ -67,27 +83,30 @@ class ParentChildScreen extends ConsumerWidget {
                   data: (BusRoute? route) {
                     if (route == null) return Text(context.l10n.notSet);
                     final RouteStop? stop = route.stopById(student.stopId);
-                    return Container(
-                      padding: const EdgeInsets.all(AppSpacing.md),
+                    return DecoratedBox(
                       decoration: BoxDecoration(
-                        color: context.colors.surfaceContainerHighest,
+                        color: context.colors.surface,
                         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                        border: Border.all(color: context.colors.outlineVariant),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          _InfoRow(icon: Icons.route_outlined, label: context.l10n.routeLabel, value: route.name),
-                          _InfoRow(
-                            icon: Icons.location_on_outlined,
-                            label: context.l10n.childStop,
-                            value: stop?.name ?? context.l10n.notSet,
-                          ),
-                          _InfoRow(
-                            icon: Icons.badge_outlined,
-                            label: context.l10n.childSupervisor,
-                            value: MockIds.supervisorNames[route.supervisorId] ?? context.l10n.notSet,
-                          ),
-                        ],
+                      child: Padding(
+                        padding: const EdgeInsets.all(AppSpacing.md),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            _InfoRow(icon: Icons.route_outlined, label: context.l10n.routeLabel, value: route.name),
+                            _InfoRow(
+                              icon: Icons.location_on_outlined,
+                              label: context.l10n.childStop,
+                              value: stop?.name ?? context.l10n.notSet,
+                            ),
+                            _InfoRow(
+                              icon: Icons.badge_outlined,
+                              label: context.l10n.childSupervisor,
+                              value: MockIds.supervisorNames[route.supervisorId] ?? context.l10n.notSet,
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },
@@ -170,14 +189,30 @@ class _ActionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Opacity(
         opacity: enabled ? 1 : 0.5,
-        child: Card(
-          margin: const EdgeInsets.only(bottom: AppSpacing.sm),
-          child: ListTile(
-            leading: Icon(icon),
-            title: Text(label),
-            subtitle: subtitle == null ? null : Text(subtitle!),
-            trailing: const Icon(Icons.chevron_right_rounded),
-            onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+          child: Material(
+            color: context.colors.surface,
+            elevation: 1,
+            shadowColor: context.colors.shadow.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+            clipBehavior: Clip.antiAlias,
+            child: ListTile(
+              leading: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: context.colors.secondaryContainer,
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSpacing.sm),
+                  child: Icon(icon, color: context.colors.onSecondaryContainer),
+                ),
+              ),
+              title: Text(label, style: context.text.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
+              subtitle: subtitle == null ? null : Text(subtitle!),
+              trailing: const Icon(Icons.arrow_forward_rounded),
+              onTap: onTap,
+            ),
           ),
         ),
       );

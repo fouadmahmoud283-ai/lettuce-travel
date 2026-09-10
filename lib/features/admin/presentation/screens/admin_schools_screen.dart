@@ -24,7 +24,7 @@ class AdminSchoolsScreen extends ConsumerWidget {
         child: AsyncValueView<List<School>>(
           value: schools,
           data: (List<School> items) => items.isEmpty
-              ? Center(child: Text(context.l10n.noData))
+              ? AppEmptyView(message: context.l10n.noData, icon: Icons.school_outlined)
               : ListView.builder(
                   padding: const EdgeInsets.all(AppSpacing.md),
                   itemCount: items.length,
@@ -32,9 +32,22 @@ class AdminSchoolsScreen extends ConsumerWidget {
                     final School school = items[index];
                     return Card(
                       child: ListTile(
-                        leading: const Icon(Icons.school_outlined),
-                        title: Text(school.name),
+                        leading: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: context.colors.primaryContainer,
+                            borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(AppSpacing.sm),
+                            child: Icon(Icons.school_outlined, color: context.colors.onPrimaryContainer),
+                          ),
+                        ),
+                        title: Text(
+                          school.name,
+                          style: context.text.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+                        ),
                         subtitle: Text(school.address.isEmpty ? context.l10n.notSet : school.address),
+                        trailing: const Icon(Icons.edit_outlined, size: 20),
                         onTap: () => _openForm(context, ref, school: school),
                       ),
                     );
@@ -48,6 +61,7 @@ class AdminSchoolsScreen extends ConsumerWidget {
   Future<void> _openForm(BuildContext context, WidgetRef ref, {School? school}) => showModalBottomSheet<void>(
         context: context,
         isScrollControlled: true,
+        showDragHandle: true,
         builder: (_) => _SchoolFormSheet(school: school),
       );
 }

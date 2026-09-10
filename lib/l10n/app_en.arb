@@ -1,8 +1,6 @@
 {
   "@@locale": "en",
-
   "appName": "Lettuce Travel",
-
   "signIn": "Sign in",
   "phoneNumber": "Phone number",
   "phoneHint": "e.g. 01012345678",
@@ -12,10 +10,22 @@
   "verify": "Verify",
   "resendCode": "Resend code",
   "resendCodeIn": "Resend code in {seconds}s",
-  "@resendCodeIn": { "placeholders": { "seconds": { "type": "int" } } },
+  "@resendCodeIn": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
   "otpInvalid": "Enter the 6-digit code",
   "otpSentTo": "We sent a code to {phone}",
-  "@otpSentTo": { "placeholders": { "phone": { "type": "String" } } },
+  "@otpSentTo": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
   "adminSignIn": "Administrator sign in",
   "adminEmailLabel": "Email",
   "adminPasswordLabel": "Password",
@@ -29,11 +39,9 @@
   "signOutConfirmTitle": "Sign out?",
   "signOutConfirmMessage": "You will need to sign in again.",
   "settings": "Settings",
-
   "roleSuperAdmin": "Administrator",
   "roleSupervisor": "Bus supervisor",
   "roleParent": "Parent",
-
   "myTrips": "My trips",
   "today": "Today",
   "noTripsToday": "No trips scheduled for today.",
@@ -50,40 +58,89 @@
   "routeLabel": "Route",
   "busLabel": "Bus",
   "stopsCount": "{count} stops",
-  "@stopsCount": { "placeholders": { "count": { "type": "int" } } },
-
+  "@stopsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "statusPending": "Waiting",
   "statusOnBoard": "On the bus",
   "statusDroppedOff": "Dropped off",
   "statusAbsent": "Absent",
   "statusNoShow": "Did not board",
-
   "checkIn": "On board",
   "checkOut": "Dropped off",
   "markNoShow": "Did not board",
   "undo": "Undo",
   "actionUndone": "Undone",
   "markedAs": "{name} marked as {status}",
-  "@markedAs": { "placeholders": { "name": { "type": "String" }, "status": { "type": "String" } } },
+  "@markedAs": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
   "stopHeader": "Stop {order} · {name}",
-  "@stopHeader": { "placeholders": { "order": { "type": "int" }, "name": { "type": "String" } } },
+  "@stopHeader": {
+    "placeholders": {
+      "order": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "absentTag": "Absent today",
-
   "countWaiting": "Waiting: {count}",
-  "@countWaiting": { "placeholders": { "count": { "type": "int" } } },
+  "@countWaiting": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "countOnBoard": "On board: {count}",
-  "@countOnBoard": { "placeholders": { "count": { "type": "int" } } },
+  "@countOnBoard": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "countDroppedOff": "Dropped off: {count}",
-  "@countDroppedOff": { "placeholders": { "count": { "type": "int" } } },
-
+  "@countDroppedOff": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "confirmNoShowTitle": "Mark as did not board?",
   "confirmNoShowMessage": "{name} will be marked as did not board for this trip.",
-  "@confirmNoShowMessage": { "placeholders": { "name": { "type": "String" } } },
+  "@confirmNoShowMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "confirmEndTripTitle": "End this trip?",
   "confirmEndTripMessage": "Location sharing will stop for this trip.",
   "confirmEndTripBlocked": "{count} children are still on board. Drop them off before ending the trip.",
-  "@confirmEndTripBlocked": { "placeholders": { "count": { "type": "int" } } },
-
+  "@confirmEndTripBlocked": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "sos": "Emergency",
   "reportIncident": "Report an incident",
   "incidentType": "Type",
@@ -105,21 +162,32 @@
   "incidentResolved": "Resolved",
   "openLabel": "Open",
   "submit": "Submit",
-
   "myChildren": "My children",
   "liveMap": "Live map",
   "rideHistory": "Ride history",
   "reportAbsence": "Report an absence",
   "busApproaching": "The bus is approaching your stop",
   "lastUpdated": "Updated {time}",
-  "@lastUpdated": { "placeholders": { "time": { "type": "String" } } },
+  "@lastUpdated": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
   "locationStale": "Location is not up to date",
   "schematicMapLabel": "Schematic view",
   "childStop": "Stop",
   "childSupervisor": "Supervisor",
   "noActiveTrip": "No trip running right now",
   "busEtaLabel": "Arriving in about {minutes} min",
-  "@busEtaLabel": { "placeholders": { "minutes": { "type": "int" } } },
+  "@busEtaLabel": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
   "absenceScopeWholeDay": "Whole day",
   "absenceScopeMorningOnly": "Morning only",
   "absenceScopeAfternoonOnly": "Afternoon only",
@@ -131,17 +199,46 @@
   "messageHint": "Write a message…",
   "sendMessage": "Send",
   "messagesEmpty": "No messages yet",
-
   "notifPickedUpTitle": "{name} is on the bus",
-  "@notifPickedUpTitle": { "placeholders": { "name": { "type": "String" } } },
+  "@notifPickedUpTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "notifPickedUpBody": "Picked up at {time} from {stop}",
-  "@notifPickedUpBody": { "placeholders": { "time": { "type": "String" }, "stop": { "type": "String" } } },
+  "@notifPickedUpBody": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "stop": {
+        "type": "String"
+      }
+    }
+  },
   "notifDroppedOffTitle": "{name} has been dropped off",
-  "@notifDroppedOffTitle": { "placeholders": { "name": { "type": "String" } } },
+  "@notifDroppedOffTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "notifDroppedOffBody": "Dropped off at {time} at {stop}",
-  "@notifDroppedOffBody": { "placeholders": { "time": { "type": "String" }, "stop": { "type": "String" } } },
-
+  "@notifDroppedOffBody": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "stop": {
+        "type": "String"
+      }
+    }
+  },
   "administration": "Administration",
+  "adminHeroSubtitle": "Schools, buses, routes and everyone who keeps them running",
   "dashboardBusesOnRoad": "Buses on the road",
   "dashboardChildrenOnBoard": "Children on board",
   "dashboardOpenIncidents": "Open incidents",
@@ -155,7 +252,6 @@
   "reports": "Reports",
   "incidentsLabel": "Incidents",
   "announcements": "Announcements",
-
   "addSchool": "Add school",
   "editSchool": "Edit school",
   "addBus": "Add bus",
@@ -165,7 +261,6 @@
   "addStudent": "Add student",
   "editStudent": "Edit student",
   "addStop": "Add stop",
-
   "schoolNameLabel": "Name (English)",
   "schoolNameArLabel": "Name (Arabic)",
   "addressLabel": "Address",
@@ -182,25 +277,39 @@
   "notesLabel": "Notes",
   "stopNameLabel": "Stop name",
   "studentsCount": "{count} students",
-  "@studentsCount": { "placeholders": { "count": { "type": "int" } } },
+  "@studentsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "guardiansCount": "{count} guardians",
-  "@guardiansCount": { "placeholders": { "count": { "type": "int" } } },
-
+  "@guardiansCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "reportsDateRange": "Date range",
   "reportsGenerate": "Generate",
   "reportsNoData": "No attendance in this range",
   "reportsExport": "Export CSV",
-
   "announcementComposeHint": "Write an announcement…",
   "announcementPublish": "Publish",
   "announcementsEmpty": "No announcements yet",
   "announcementScopeSchool": "Whole school",
   "announcementScopeRoute": "One route",
-
   "pendingSync": "{count} check-ins waiting to sync",
-  "@pendingSync": { "placeholders": { "count": { "type": "int" } } },
+  "@pendingSync": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "offlineBanner": "No connection. Check-ins are saved on this device.",
-
   "errorNoConnection": "No internet connection.",
   "errorNotAllowed": "You do not have permission to do this.",
   "errorNotFound": "Not found.",
@@ -208,7 +317,6 @@
   "errorUnexpected": "Something went wrong. Please try again.",
   "errorLocationPermission": "Location permission is required to run a trip.",
   "errorTripNotEnded": "Some children are still on board. Drop them off before ending the trip.",
-
   "cancel": "Cancel",
   "confirm": "Confirm",
   "save": "Save",

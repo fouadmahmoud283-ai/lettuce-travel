@@ -7,6 +7,7 @@ import 'package:lettuce_travel/app/theme/app_spacing.dart';
 import 'package:lettuce_travel/core/extensions/context_x.dart';
 import 'package:lettuce_travel/core/widgets/async_value_view.dart';
 import 'package:lettuce_travel/core/widgets/child_avatar.dart';
+import 'package:lettuce_travel/core/widgets/gradient_hero_header.dart';
 import 'package:lettuce_travel/core/widgets/status_chip.dart';
 import 'package:lettuce_travel/features/attendance/domain/entities/attendance_status.dart';
 import 'package:lettuce_travel/features/attendance/presentation/widgets/attendance_status_x.dart';
@@ -40,16 +41,63 @@ class ParentHomeScreen extends ConsumerWidget {
         child: AsyncValueView<List<ParentChildSummary>>(
           value: children,
           data: (List<ParentChildSummary> summaries) => summaries.isEmpty
-              ? Center(child: Text(context.l10n.noData))
+              ? AppEmptyView(message: context.l10n.noData, icon: Icons.family_restroom_rounded)
               : ListView.separated(
                   padding: const EdgeInsets.all(AppSpacing.md),
-                  itemCount: summaries.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.sm),
-                  itemBuilder: (BuildContext context, int index) =>
-                      _ChildCard(summary: summaries[index]),
+                  itemCount: summaries.length + 1,
+                  separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.md),
+                  itemBuilder: (BuildContext context, int index) {
+                    if (index == 0) return _OverviewHeader(summaries: summaries);
+                    return _ChildCard(summary: summaries[index - 1]);
+                  },
                 ),
         ),
       ),
+    );
+  }
+}
+
+class _OverviewHeader extends StatelessWidget {
+  const _OverviewHeader({required this.summaries});
+
+  final List<ParentChildSummary> summaries;
+
+  @override
+  Widget build(BuildContext context) {
+    final int onBoard = summaries
+        .where((ParentChildSummary summary) =>
+            summary.todayRecord?.status == AttendanceStatus.onBoard)
+        .length;
+    final int droppedOff = summaries
+        .where((ParentChildSummary summary) =>
+            summary.todayRecord?.status == AttendanceStatus.droppedOff)
+        .length;
+    final int waiting = summaries
+      .where((ParentChildSummary summary) =>
+        (summary.todayRecord?.status ?? AttendanceStatus.pending) ==
+        AttendanceStatus.pending)
+      .length;
+    return GradientHeroHeader(
+      title: context.l10n.today,
+      subtitle: context.l10n.myChildren,
+      trailingIcon: Icons.wb_sunny_rounded,
+      metrics: <HeroMetric>[
+        HeroMetric(
+          value: '$waiting',
+          label: context.l10n.statusPending,
+          icon: Icons.schedule_rounded,
+        ),
+        HeroMetric(
+          value: '$onBoard',
+          label: context.l10n.statusOnBoard,
+          icon: Icons.directions_bus_filled_rounded,
+        ),
+        HeroMetric(
+          value: '$droppedOff',
+          label: context.l10n.statusDroppedOff,
+          icon: Icons.check_circle_rounded,
+        ),
+      ],
     );
   }
 }
@@ -63,7 +111,10 @@ class _ChildCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final AttendanceStatus status = summary.todayRecord?.status ?? AttendanceStatus.pending;
     return Material(
-      color: context.colors.surfaceContainerHighest,
+      color: context.colors.surface,
+      elevation: 1,
+      shadowColor: context.colors.shadow.withValues(alpha: 0.14),
+      clipBehavior: Clip.antiAlias,
       borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
       child: InkWell(
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
@@ -99,9 +150,15 @@ class _ChildCard extends StatelessWidget {
                   ],
                 ),
               ),
-              StatusChip(label: status.label(context), color: status.color(), icon: status.icon()),
-              const SizedBox(width: AppSpacing.xs),
-              const Icon(Icons.chevron_right_rounded),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  StatusChip(label: status.label(context), color: status.color(), icon: status.icon()),
+                  const SizedBox(height: AppSpacing.xs),
+                  Icon(Icons.arrow_forward_rounded, size: 18, color: context.colors.onSurfaceVariant),
+                ],
+              ),
             ],
           ),
         ),

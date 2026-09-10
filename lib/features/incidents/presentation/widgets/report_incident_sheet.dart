@@ -18,6 +18,7 @@ Future<void> showReportIncidentSheet(
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
+      showDragHandle: true,
       builder: (BuildContext sheetContext) => _ReportIncidentSheet(
         schoolId: schoolId,
         tripId: tripId,

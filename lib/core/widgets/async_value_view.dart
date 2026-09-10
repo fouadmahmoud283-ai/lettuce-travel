@@ -49,12 +49,21 @@ class AppErrorView extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Icon(
-                Icons.error_outline_rounded,
-                size: 40,
-                color: context.colors.error,
+              Container(
+                width: 72,
+                height: 72,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: context.colors.errorContainer,
+                ),
+                child: Icon(
+                  Icons.error_outline_rounded,
+                  size: 32,
+                  color: context.colors.onErrorContainer,
+                ),
               ),
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.md),
               Text(
                 message,
                 textAlign: TextAlign.center,
@@ -62,9 +71,10 @@ class AppErrorView extends StatelessWidget {
               ),
               if (onRetry != null) ...<Widget>[
                 const SizedBox(height: AppSpacing.md),
-                OutlinedButton(
+                OutlinedButton.icon(
+                  icon: const Icon(Icons.refresh_rounded),
                   onPressed: onRetry,
-                  child: Text(context.l10n.retry),
+                  label: Text(context.l10n.retry),
                 ),
               ],
             ],
@@ -74,15 +84,24 @@ class AppErrorView extends StatelessWidget {
 }
 
 /// Full-bleed empty state, used when a stream resolves to an empty list.
+///
+/// The icon sits inside a soft tinted circle rather than floating bare — a
+/// small touch, but it is what separates a polished empty state from a
+/// "nothing to see, sorry" placeholder, and it repeats identically across
+/// every list screen in the app.
 class AppEmptyView extends StatelessWidget {
   const AppEmptyView({
     this.message,
     this.icon = Icons.inbox_outlined,
+    this.action,
     super.key,
   });
 
   final String? message;
   final IconData icon;
+
+  /// An optional call to action shown under the message, e.g. "Add a school".
+  final Widget? action;
 
   @override
   Widget build(BuildContext context) => Center(
@@ -91,14 +110,27 @@ class AppEmptyView extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Icon(icon, size: 40, color: context.colors.outline),
-              const SizedBox(height: AppSpacing.sm),
+              Container(
+                width: 72,
+                height: 72,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: context.colors.surfaceContainerHighest,
+                ),
+                child: Icon(icon, size: 32, color: context.colors.onSurfaceVariant),
+              ),
+              const SizedBox(height: AppSpacing.md),
               Text(
                 message ?? context.l10n.noData,
                 textAlign: TextAlign.center,
                 style: context.text.bodyMedium
-                    ?.copyWith(color: context.colors.outline),
+                    ?.copyWith(color: context.colors.onSurfaceVariant),
               ),
+              if (action != null) ...<Widget>[
+                const SizedBox(height: AppSpacing.md),
+                action!,
+              ],
             ],
           ),
         ),

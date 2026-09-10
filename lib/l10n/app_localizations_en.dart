@@ -386,6 +386,9 @@ class AppL10nEn extends AppL10n {
   String get administration => 'Administration';
 
   @override
+  String get adminHeroSubtitle => 'Schools, buses, routes and everyone who keeps them running';
+
+  @override
   String get dashboardBusesOnRoad => 'Buses on the road';
 
   @override

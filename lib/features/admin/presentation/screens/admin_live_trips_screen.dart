@@ -28,7 +28,7 @@ class AdminLiveTripsScreen extends ConsumerWidget {
         child: AsyncValueView<List<Trip>>(
           value: trips,
           data: (List<Trip> items) => items.isEmpty
-              ? Center(child: Text(context.l10n.noActiveTrip))
+              ? AppEmptyView(message: context.l10n.noActiveTrip, icon: Icons.map_outlined)
               : ListView.builder(
                   padding: const EdgeInsets.all(AppSpacing.md),
                   itemCount: items.length,
@@ -59,14 +59,15 @@ class _LiveTripCard extends ConsumerWidget {
     final Bus? bus = ref.watch(busByIdProvider(trip.busId)).asData?.value;
     final LocationPing? ping = ref.watch(tripLocationProvider(trip.id)).asData?.value;
 
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: context.colors.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Material(
+      color: context.colors.surface,
+      elevation: 2,
+      shadowColor: context.colors.shadow.withValues(alpha: 0.12),
+      borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Row(
             children: <Widget>[
@@ -99,6 +100,7 @@ class _LiveTripCard extends ConsumerWidget {
             ),
           ],
         ],
+        ),
       ),
     );
   }

@@ -1,8 +1,6 @@
 {
   "@@locale": "ar",
-
   "appName": "لتس ترافل",
-
   "signIn": "تسجيل الدخول",
   "phoneNumber": "رقم الهاتف",
   "phoneHint": "مثال: 01012345678",
@@ -27,11 +25,9 @@
   "signOutConfirmTitle": "تسجيل الخروج؟",
   "signOutConfirmMessage": "ستحتاج إلى تسجيل الدخول مرة أخرى.",
   "settings": "الإعدادات",
-
   "roleSuperAdmin": "مسؤول النظام",
   "roleSupervisor": "مشرف الحافلة",
   "roleParent": "ولي الأمر",
-
   "myTrips": "رحلاتي",
   "today": "اليوم",
   "noTripsToday": "لا توجد رحلات مجدولة اليوم.",
@@ -48,13 +44,11 @@
   "routeLabel": "الخط",
   "busLabel": "الحافلة",
   "stopsCount": "{count} محطات",
-
   "statusPending": "في الانتظار",
   "statusOnBoard": "داخل الحافلة",
   "statusDroppedOff": "تم التسليم",
   "statusAbsent": "غائب",
   "statusNoShow": "لم يحضر",
-
   "checkIn": "صعد الحافلة",
   "checkOut": "تم التسليم",
   "markNoShow": "لم يحضر",
@@ -63,17 +57,14 @@
   "markedAs": "تم تسجيل {name} كـ{status}",
   "stopHeader": "محطة {order} · {name}",
   "absentTag": "غائب اليوم",
-
   "countWaiting": "في الانتظار: {count}",
   "countOnBoard": "داخل الحافلة: {count}",
   "countDroppedOff": "تم التسليم: {count}",
-
   "confirmNoShowTitle": "تسجيل كـ«لم يحضر»؟",
   "confirmNoShowMessage": "سيتم تسجيل {name} كـ«لم يحضر» لهذه الرحلة.",
   "confirmEndTripTitle": "إنهاء هذه الرحلة؟",
   "confirmEndTripMessage": "سيتم إيقاف مشاركة الموقع لهذه الرحلة.",
   "confirmEndTripBlocked": "لا يزال هناك {count} من الأطفال داخل الحافلة. قم بتسليمهم قبل إنهاء الرحلة.",
-
   "sos": "طوارئ",
   "reportIncident": "الإبلاغ عن حادثة",
   "incidentType": "النوع",
@@ -95,7 +86,6 @@
   "incidentResolved": "تم الحل",
   "openLabel": "مفتوحة",
   "submit": "إرسال",
-
   "myChildren": "أبنائي",
   "liveMap": "الخريطة المباشرة",
   "rideHistory": "سجل الرحلات",
@@ -119,13 +109,12 @@
   "messageHint": "اكتب رسالة…",
   "sendMessage": "إرسال",
   "messagesEmpty": "لا توجد رسائل بعد",
-
   "notifPickedUpTitle": "{name} داخل الحافلة",
   "notifPickedUpBody": "تم الصعود الساعة {time} من {stop}",
   "notifDroppedOffTitle": "تم تسليم {name}",
   "notifDroppedOffBody": "تم التسليم الساعة {time} عند {stop}",
-
   "administration": "الإدارة",
+  "adminHeroSubtitle": "المدارس والحافلات والخطوط وكل من يديرها",
   "dashboardBusesOnRoad": "حافلات في الطريق",
   "dashboardChildrenOnBoard": "أطفال داخل الحافلات",
   "dashboardOpenIncidents": "حوادث مفتوحة",
@@ -139,7 +128,6 @@
   "reports": "التقارير",
   "incidentsLabel": "الحوادث",
   "announcements": "الإعلانات",
-
   "addSchool": "إضافة مدرسة",
   "editSchool": "تعديل المدرسة",
   "addBus": "إضافة حافلة",
@@ -149,7 +137,6 @@
   "addStudent": "إضافة طالب",
   "editStudent": "تعديل الطالب",
   "addStop": "إضافة محطة",
-
   "schoolNameLabel": "الاسم (بالإنجليزية)",
   "schoolNameArLabel": "الاسم (بالعربية)",
   "addressLabel": "العنوان",
@@ -167,21 +154,17 @@
   "stopNameLabel": "اسم المحطة",
   "studentsCount": "{count} طلاب",
   "guardiansCount": "{count} أولياء أمور",
-
   "reportsDateRange": "الفترة الزمنية",
   "reportsGenerate": "إنشاء التقرير",
   "reportsNoData": "لا يوجد حضور في هذه الفترة",
   "reportsExport": "تصدير CSV",
-
   "announcementComposeHint": "اكتب إعلانًا…",
   "announcementPublish": "نشر",
   "announcementsEmpty": "لا توجد إعلانات بعد",
   "announcementScopeSchool": "المدرسة بالكامل",
   "announcementScopeRoute": "خط واحد",
-
   "pendingSync": "{count} عملية بانتظار المزامنة",
   "offlineBanner": "لا يوجد اتصال. يتم حفظ العمليات على الجهاز.",
-
   "errorNoConnection": "لا يوجد اتصال بالإنترنت.",
   "errorNotAllowed": "ليس لديك صلاحية للقيام بذلك.",
   "errorNotFound": "غير موجود.",
@@ -189,7 +172,6 @@
   "errorUnexpected": "حدث خطأ ما. حاول مرة أخرى.",
   "errorLocationPermission": "إذن الموقع مطلوب لتشغيل الرحلة.",
   "errorTripNotEnded": "لا يزال بعض الأطفال داخل الحافلة. قم بتسليمهم قبل إنهاء الرحلة.",
-
   "cancel": "إلغاء",
   "confirm": "تأكيد",
   "save": "حفظ",

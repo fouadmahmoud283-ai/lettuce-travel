@@ -24,6 +24,7 @@ class AdminStudentsScreen extends ConsumerWidget {
         onPressed: () => showModalBottomSheet<void>(
           context: context,
           isScrollControlled: true,
+          showDragHandle: true,
           builder: (_) => const _StudentFormSheet(),
         ),
         child: const Icon(Icons.add),
@@ -32,7 +33,7 @@ class AdminStudentsScreen extends ConsumerWidget {
         child: AsyncValueView<List<Student>>(
           value: students,
           data: (List<Student> items) => items.isEmpty
-              ? Center(child: Text(context.l10n.noData))
+              ? AppEmptyView(message: context.l10n.noData, icon: Icons.groups_outlined)
               : ListView.builder(
                   padding: const EdgeInsets.all(AppSpacing.md),
                   itemCount: items.length,
@@ -49,6 +50,7 @@ class AdminStudentsScreen extends ConsumerWidget {
                         onTap: () => showModalBottomSheet<void>(
                           context: context,
                           isScrollControlled: true,
+                          showDragHandle: true,
                           builder: (_) => _StudentFormSheet(student: student),
                         ),
                       ),

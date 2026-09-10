@@ -13,6 +13,7 @@ import 'package:lettuce_travel/core/extensions/context_x.dart';
 import 'package:lettuce_travel/core/extensions/date_x.dart';
 import 'package:lettuce_travel/core/utils/result.dart';
 import 'package:lettuce_travel/core/widgets/async_value_view.dart';
+import 'package:lettuce_travel/core/widgets/status_chip.dart';
 import 'package:lettuce_travel/features/schools/domain/entities/bus_route.dart';
 import 'package:lettuce_travel/features/supervisor/presentation/controllers/supervisor_home_controller.dart';
 import 'package:lettuce_travel/features/tracking/data/repositories/fake_tracking_repository.dart';
@@ -45,7 +46,7 @@ class SupervisorHomeScreen extends ConsumerWidget {
           value: routeAsync,
           data: (BusRoute? route) {
             if (route == null) {
-              return Center(child: Text(context.l10n.noTripsToday));
+              return AppEmptyView(message: context.l10n.noTripsToday, icon: Icons.event_busy_outlined);
             }
             return AsyncValueView<List<Trip>>(
               value: tripsAsync,
@@ -99,79 +100,105 @@ class _TripCard extends ConsumerWidget {
     final bool isLive = trip?.isLive ?? false;
     final bool hasEnded = trip?.hasEnded ?? false;
 
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: scheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-        border: isLive ? Border.all(color: AppColors.statusOnBoard, width: 2) : null,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Icon(
-                type == TripType.morningPickup
-                    ? Icons.wb_sunny_outlined
-                    : Icons.home_outlined,
-                color: scheme.primary,
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              Expanded(
-                child: Text(typeLabel, style: context.text.titleMedium),
-              ),
-              if (isLive)
+    return Material(
+      color: scheme.surface,
+      elevation: isLive ? 3 : 1,
+      shadowColor: scheme.shadow.withValues(alpha: 0.14),
+      borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+      clipBehavior: Clip.antiAlias,
+      child: Container(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        decoration: BoxDecoration(
+          border: BorderDirectional(
+            start: BorderSide(
+              color: isLive ? AppColors.statusOnBoard : scheme.outlineVariant,
+              width: isLive ? 4 : 1,
+            ),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(
+              children: <Widget>[
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.sm,
-                    vertical: 2,
-                  ),
+                  padding: const EdgeInsets.all(AppSpacing.sm),
                   decoration: BoxDecoration(
-                    color: AppColors.statusOnBoard.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                    color: scheme.primaryContainer,
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                   ),
-                  child: Text(
-                    context.l10n.tripInProgress,
-                    style: context.text.labelSmall
-                        ?.copyWith(color: AppColors.statusOnBoard, fontWeight: FontWeight.w700),
+                  child: Icon(
+                    type == TripType.morningPickup
+                        ? Icons.wb_sunny_outlined
+                        : Icons.home_outlined,
+                    color: scheme.onPrimaryContainer,
+                    size: 20,
                   ),
                 ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Text('${context.l10n.routeLabel}: ${route.name}', style: context.text.bodyMedium),
-          Text(
-            context.l10n.stopsCount(route.stops.length),
-            style: context.text.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
-          ),
-          if (isLive) ...<Widget>[
-            const SizedBox(height: AppSpacing.xs),
+                const SizedBox(width: AppSpacing.sm),
+                Expanded(
+                  child: Text(
+                    typeLabel,
+                    style: context.text.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+                  ),
+                ),
+                if (isLive)
+                  StatusChip(
+                    label: context.l10n.tripInProgress,
+                    color: AppColors.statusOnBoard,
+                    icon: Icons.podcasts_rounded,
+                    dense: true,
+                  ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Text('${context.l10n.routeLabel}: ${route.name}', style: context.text.bodyMedium),
+            const SizedBox(height: 2),
             Text(
-              '${context.l10n.countOnBoard(trip!.onBoardCount)} · '
-              '${context.l10n.countDroppedOff(trip!.completedCount)}',
-              style: context.text.bodySmall,
+              context.l10n.stopsCount(route.stops.length),
+              style: context.text.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
+            ),
+            if (isLive) ...<Widget>[
+              const SizedBox(height: AppSpacing.sm),
+              Wrap(
+                spacing: AppSpacing.sm,
+                runSpacing: AppSpacing.xs,
+                children: <Widget>[
+                  StatusChip(
+                    label: context.l10n.countOnBoard(trip!.onBoardCount),
+                    color: AppColors.statusOnBoard,
+                    icon: Icons.directions_bus_filled_rounded,
+                    dense: true,
+                  ),
+                  StatusChip(
+                    label: context.l10n.countDroppedOff(trip!.completedCount),
+                    color: AppColors.statusDroppedOff,
+                    icon: Icons.check_circle_rounded,
+                    dense: true,
+                  ),
+                ],
+              ),
+            ],
+            const SizedBox(height: AppSpacing.md),
+            SizedBox(
+              width: double.infinity,
+              child: hasEnded
+                  ? OutlinedButton(
+                      onPressed: () => context.push(
+                        RoutePaths.of(RoutePaths.supervisorRoster, <String, String>{
+                          'tripId': trip!.id,
+                        }),
+                      ),
+                      child: Text(context.l10n.tripEnded),
+                    )
+                  : FilledButton.icon(
+                      icon: Icon(isLive ? Icons.list_alt_rounded : Icons.play_arrow_rounded),
+                      label: Text(isLive ? context.l10n.resumeTrip : context.l10n.startTrip),
+                      onPressed: () => unawaited(_startOrResume(context, ref)),
+                    ),
             ),
           ],
-          const SizedBox(height: AppSpacing.md),
-          SizedBox(
-            width: double.infinity,
-            child: hasEnded
-                ? OutlinedButton(
-                    onPressed: () => context.push(
-                      RoutePaths.of(RoutePaths.supervisorRoster, <String, String>{
-                        'tripId': trip!.id,
-                      }),
-                    ),
-                    child: Text(context.l10n.tripEnded),
-                  )
-                : FilledButton.icon(
-                    icon: Icon(isLive ? Icons.list_alt_rounded : Icons.play_arrow_rounded),
-                    label: Text(isLive ? context.l10n.resumeTrip : context.l10n.startTrip),
-                    onPressed: () => unawaited(_startOrResume(context, ref)),
-                  ),
-          ),
-        ],
+        ),
       ),
     );
   }

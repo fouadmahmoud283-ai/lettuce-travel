@@ -35,73 +35,85 @@ class RosterRowTile extends StatelessWidget {
     final bool isPending = status == AttendanceStatus.pending && !row.isAbsentToday;
     final bool isActionable = onPrimaryTap != null;
 
-    return Opacity(
+    return AnimatedOpacity(
+      duration: const Duration(milliseconds: 250),
       opacity: row.isAbsentToday ? 0.5 : 1,
-      child: InkWell(
-        onTap: isActionable
-            ? () {
-                unawaited(HapticFeedback.mediumImpact());
-                onPrimaryTap!();
-              }
-            : null,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: AppSpacing.rosterRowHeight),
-          child: Padding(
-            padding: const EdgeInsetsDirectional.symmetric(
-              horizontal: AppSpacing.md,
-              vertical: AppSpacing.sm,
-            ),
-            child: Row(
-              children: <Widget>[
-                ChildAvatar(
-                  initials: row.student.initials,
-                  photoUrl: row.student.photoUrl,
-                  size: AppSpacing.avatarSize,
-                  ringColor: status.color(),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+        color: status == AttendanceStatus.pending
+            ? Theme.of(context).colorScheme.surface
+            : status.color().withValues(alpha: 0.08),
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            onTap: isActionable
+                ? () {
+                    unawaited(HapticFeedback.mediumImpact());
+                    onPrimaryTap!();
+                  }
+                : null,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: AppSpacing.rosterRowHeight),
+              child: Padding(
+                padding: const EdgeInsetsDirectional.symmetric(
+                  horizontal: AppSpacing.md,
+                  vertical: AppSpacing.sm,
                 ),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(
-                        row.student.fullName,
-                        style: context.text.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+                child: Row(
+                  children: <Widget>[
+                    ChildAvatar(
+                      initials: row.student.initials,
+                      photoUrl: row.student.photoUrl,
+                      size: AppSpacing.avatarSize,
+                      ringColor: status.color(),
+                    ),
+                    const SizedBox(width: AppSpacing.md),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text(
+                            row.student.fullName,
+                            style:
+                                context.text.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+                          ),
+                          if (row.stop != null)
+                            Text(
+                              row.stop!.name,
+                              style: context.text.bodySmall
+                                  ?.copyWith(color: context.colors.onSurfaceVariant),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                        ],
                       ),
-                      if (row.stop != null)
-                        Text(
-                          row.stop!.name,
-                          style: context.text.bodySmall
-                              ?.copyWith(color: context.colors.onSurfaceVariant),
-                          overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    if (row.isAbsentToday)
+                      StatusChip(
+                        label: context.l10n.absentTag,
+                        color: status.color(),
+                        icon: status.icon(),
+                        dense: true,
+                      )
+                    else ...<Widget>[
+                      StatusChip(
+                        label: status.label(context),
+                        color: status.color(),
+                        icon: status.icon(),
+                        dense: true,
+                      ),
+                      if (isPending && onMarkNoShow != null)
+                        IconButton(
+                          icon: const Icon(Icons.person_off_outlined),
+                          tooltip: context.l10n.markNoShow,
+                          onPressed: onMarkNoShow,
                         ),
                     ],
-                  ),
+                  ],
                 ),
-                const SizedBox(width: AppSpacing.sm),
-                if (row.isAbsentToday)
-                  StatusChip(
-                    label: context.l10n.absentTag,
-                    color: status.color(),
-                    icon: status.icon(),
-                    dense: true,
-                  )
-                else ...<Widget>[
-                  StatusChip(
-                    label: status.label(context),
-                    color: status.color(),
-                    icon: status.icon(),
-                    dense: true,
-                  ),
-                  if (isPending && onMarkNoShow != null)
-                    IconButton(
-                      icon: const Icon(Icons.person_off_outlined),
-                      tooltip: context.l10n.markNoShow,
-                      onPressed: onMarkNoShow,
-                    ),
-                ],
-              ],
+              ),
             ),
           ),
         ),

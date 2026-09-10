@@ -30,12 +30,12 @@ class ParentLiveMapScreen extends ConsumerWidget {
       appBar: AppBar(title: Text(context.l10n.liveMap)),
       body: SafeArea(
         child: trip == null
-            ? Center(child: Text(context.l10n.noActiveTrip))
+            ? AppEmptyView(message: context.l10n.noActiveTrip, icon: Icons.map_outlined)
             : AsyncValueView<BusRoute?>(
                 value: routeAsync,
                 data: (BusRoute? route) {
                   if (route == null || student == null) {
-                    return Center(child: Text(context.l10n.noData));
+                    return AppEmptyView(message: context.l10n.noData, icon: Icons.alt_route_rounded);
                   }
                   final AsyncValue<LocationPing?> pingAsync =
                       ref.watch(tripLocationProvider(trip.id));
@@ -82,12 +82,15 @@ class ParentLiveMapScreen extends ConsumerWidget {
                       ),
                       const SizedBox(height: AppSpacing.md),
                       if (ping == null)
-                        Text(context.l10n.locationStale)
+                        _MapStatusBanner(
+                          icon: Icons.cloud_off_rounded,
+                          label: context.l10n.locationStale,
+                        )
                       else ...<Widget>[
                         if (etaMinutes != null)
-                          Text(
-                            context.l10n.busEtaLabel(etaMinutes),
-                            style: context.text.titleMedium,
+                          _MapStatusBanner(
+                            icon: Icons.near_me_rounded,
+                            label: context.l10n.busEtaLabel(etaMinutes),
                           ),
                         const SizedBox(height: AppSpacing.xs),
                         Text(
@@ -115,4 +118,37 @@ class ParentLiveMapScreen extends ConsumerWidget {
     final double minutes = (meters / 1000) / speedKmh * 60;
     return minutes.clamp(1, 45).round();
   }
+}
+
+class _MapStatusBanner extends StatelessWidget {
+  const _MapStatusBanner({required this.icon, required this.label});
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) => DecoratedBox(
+        decoration: BoxDecoration(
+          color: context.colors.primaryContainer,
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.md),
+          child: Row(
+            children: <Widget>[
+              Icon(icon, color: context.colors.onPrimaryContainer),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Text(
+                  label,
+                  style: context.text.titleMedium?.copyWith(
+                    color: context.colors.onPrimaryContainer,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
 }

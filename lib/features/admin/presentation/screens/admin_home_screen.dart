@@ -6,6 +6,7 @@ import 'package:lettuce_travel/app/router/route_paths.dart';
 import 'package:lettuce_travel/app/theme/app_spacing.dart';
 import 'package:lettuce_travel/core/extensions/context_x.dart';
 import 'package:lettuce_travel/core/widgets/async_value_view.dart';
+import 'package:lettuce_travel/core/widgets/gradient_hero_header.dart';
 import 'package:lettuce_travel/core/widgets/nav_card.dart';
 import 'package:lettuce_travel/core/widgets/stat_tile.dart';
 import 'package:lettuce_travel/features/admin/presentation/controllers/admin_dashboard_controller.dart';
@@ -36,6 +37,12 @@ class AdminHomeScreen extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.all(AppSpacing.md),
           children: <Widget>[
+            GradientHeroHeader(
+              title: context.l10n.administration,
+              subtitle: context.l10n.adminHeroSubtitle,
+              trailingIcon: Icons.insights_rounded,
+            ),
+            const SizedBox(height: AppSpacing.md),
             AsyncValueView<AdminDashboardStats>(
               value: stats,
               data: (AdminDashboardStats s) => GridView.count(

@@ -41,27 +41,42 @@ class AdminReportsScreen extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.all(AppSpacing.md),
           children: <Widget>[
-            Text(context.l10n.reportsDateRange, style: context.text.titleMedium),
-            const SizedBox(height: AppSpacing.sm),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () => _pickDate(context, ref, isFrom: true),
-                    child: Text(from.toServiceDate()),
-                  ),
+            DecoratedBox(
+              decoration: BoxDecoration(
+                color: context.colors.surface,
+                borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                border: Border.all(color: context.colors.outlineVariant),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(context.l10n.reportsDateRange, style: context.text.titleMedium),
+                    const SizedBox(height: AppSpacing.sm),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () => _pickDate(context, ref, isFrom: true),
+                            child: Text(from.toServiceDate()),
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                          child: Icon(Icons.arrow_forward_rounded, size: 16),
+                        ),
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () => _pickDate(context, ref, isFrom: false),
+                            child: Text(to.toServiceDate()),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-                  child: Icon(Icons.arrow_forward_rounded, size: 16),
-                ),
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () => _pickDate(context, ref, isFrom: false),
-                    child: Text(to.toServiceDate()),
-                  ),
-                ),
-              ],
+              ),
             ),
             const SizedBox(height: AppSpacing.lg),
             AsyncValueView<List<AttendanceRecord>>(

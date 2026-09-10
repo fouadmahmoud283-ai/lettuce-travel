@@ -27,16 +27,36 @@ class SettingsScreen extends ConsumerWidget {
           children: <Widget>[
             if (auth.user != null)
               Card(
+                color: context.colors.surface,
+                elevation: 1,
+                shadowColor: context.colors.shadow.withValues(alpha: 0.1),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                ),
                 child: ListTile(
-                  leading: const Icon(Icons.person_outline),
+                  leading: CircleAvatar(
+                    backgroundColor: context.colors.primaryContainer,
+                    foregroundColor: context.colors.onPrimaryContainer,
+                    child: const Icon(Icons.person_outline),
+                  ),
                   title: Text(auth.user!.displayName),
                   subtitle: Text(auth.user!.phone ?? auth.user!.email ?? ''),
                 ),
               ),
             const SizedBox(height: AppSpacing.md),
             Card(
+              color: context.colors.surface,
+              elevation: 1,
+              shadowColor: context.colors.shadow.withValues(alpha: 0.1),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+              ),
               child: ListTile(
-                leading: const Icon(Icons.language_rounded),
+                leading: CircleAvatar(
+                  backgroundColor: context.colors.secondaryContainer,
+                  foregroundColor: context.colors.onSecondaryContainer,
+                  child: const Icon(Icons.language_rounded),
+                ),
                 title: Text(context.l10n.language),
                 trailing: SegmentedButton<String>(
                   segments: const <ButtonSegment<String>>[

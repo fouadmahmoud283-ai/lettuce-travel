@@ -39,35 +39,55 @@ class _ParentAbsenceScreenState extends ConsumerState<ParentAbsenceScreen> {
           child: ListView(
             padding: const EdgeInsets.all(AppSpacing.md),
             children: <Widget>[
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: const Icon(Icons.calendar_today_outlined),
-                title: Text(context.l10n.selectDate),
-                subtitle: Text(_date.toServiceDate()),
-                onTap: _pickDate,
+              Material(
+                color: context.colors.surface,
+                elevation: 1,
+                borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                child: ListTile(
+                  leading: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: context.colors.primaryContainer,
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(AppSpacing.sm),
+                      child: Icon(
+                        Icons.calendar_today_outlined,
+                        color: context.colors.onPrimaryContainer,
+                      ),
+                    ),
+                  ),
+                  title: Text(context.l10n.selectDate),
+                  subtitle: Text(_date.toServiceDate()),
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: _pickDate,
+                ),
               ),
               const SizedBox(height: AppSpacing.md),
-              RadioGroup<AbsenceScope>(
-                groupValue: _scope,
-                onChanged: (AbsenceScope? v) => setState(() => _scope = v!),
-                child: Column(
-                  children: <Widget>[
-                    RadioListTile<AbsenceScope>(
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(context.l10n.absenceScopeWholeDay),
-                      value: AbsenceScope.wholeDay,
-                    ),
-                    RadioListTile<AbsenceScope>(
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(context.l10n.absenceScopeMorningOnly),
-                      value: AbsenceScope.morningOnly,
-                    ),
-                    RadioListTile<AbsenceScope>(
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(context.l10n.absenceScopeAfternoonOnly),
-                      value: AbsenceScope.afternoonOnly,
-                    ),
-                  ],
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  color: context.colors.surface,
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                ),
+                child: RadioGroup<AbsenceScope>(
+                  groupValue: _scope,
+                  onChanged: (AbsenceScope? v) => setState(() => _scope = v!),
+                  child: Column(
+                    children: <Widget>[
+                      RadioListTile<AbsenceScope>(
+                        title: Text(context.l10n.absenceScopeWholeDay),
+                        value: AbsenceScope.wholeDay,
+                      ),
+                      RadioListTile<AbsenceScope>(
+                        title: Text(context.l10n.absenceScopeMorningOnly),
+                        value: AbsenceScope.morningOnly,
+                      ),
+                      RadioListTile<AbsenceScope>(
+                        title: Text(context.l10n.absenceScopeAfternoonOnly),
+                        value: AbsenceScope.afternoonOnly,
+                      ),
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: AppSpacing.md),

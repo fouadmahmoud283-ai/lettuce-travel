@@ -781,6 +781,12 @@ abstract class AppL10n {
   /// **'Administration'**
   String get administration;
 
+  /// No description provided for @adminHeroSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Schools, buses, routes and everyone who keeps them running'**
+  String get adminHeroSubtitle;
+
   /// No description provided for @dashboardBusesOnRoad.
   ///
   /// In en, this message translates to:

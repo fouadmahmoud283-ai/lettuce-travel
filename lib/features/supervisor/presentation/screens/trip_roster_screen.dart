@@ -11,6 +11,7 @@ import 'package:lettuce_travel/core/extensions/context_x.dart';
 import 'package:lettuce_travel/core/providers/firebase_providers.dart';
 import 'package:lettuce_travel/core/widgets/async_value_view.dart';
 import 'package:lettuce_travel/core/widgets/confirm_dialog.dart';
+import 'package:lettuce_travel/core/widgets/status_chip.dart';
 import 'package:lettuce_travel/features/attendance/domain/entities/attendance_status.dart';
 import 'package:lettuce_travel/features/attendance/presentation/widgets/attendance_status_x.dart';
 import 'package:lettuce_travel/features/auth/presentation/controllers/auth_controller.dart';
@@ -66,7 +67,7 @@ class TripRosterScreen extends ConsumerWidget {
           value: rosterAsync,
           data: (RosterData? data) {
             if (data == null) {
-              return Center(child: Text(context.l10n.noData));
+              return AppEmptyView(message: context.l10n.noData, icon: Icons.list_alt_outlined);
             }
             return _RosterBody(tripId: tripId, data: data, isOnline: isOnline);
           },
@@ -116,18 +117,33 @@ class _RosterBody extends ConsumerWidget {
             vertical: AppSpacing.sm,
           ),
           child: Wrap(
-            spacing: AppSpacing.md,
+            spacing: AppSpacing.sm,
             runSpacing: AppSpacing.xs,
             children: <Widget>[
-              Text(context.l10n.countWaiting(data.waitingCount)),
-              Text(context.l10n.countOnBoard(data.onBoardCount)),
-              Text(context.l10n.countDroppedOff(data.droppedOffCount)),
+              StatusChip(
+                label: context.l10n.countWaiting(data.waitingCount),
+                color: AttendanceStatus.pending.color(),
+                icon: AttendanceStatus.pending.icon(),
+                dense: true,
+              ),
+              StatusChip(
+                label: context.l10n.countOnBoard(data.onBoardCount),
+                color: AttendanceStatus.onBoard.color(),
+                icon: AttendanceStatus.onBoard.icon(),
+                dense: true,
+              ),
+              StatusChip(
+                label: context.l10n.countDroppedOff(data.droppedOffCount),
+                color: AttendanceStatus.droppedOff.color(),
+                icon: AttendanceStatus.droppedOff.icon(),
+                dense: true,
+              ),
             ],
           ),
         ),
         Expanded(
           child: data.rows.isEmpty
-              ? Center(child: Text(context.l10n.noData))
+              ? AppEmptyView(message: context.l10n.noData, icon: Icons.groups_outlined)
               : ListView(
                   children: <Widget>[
                     for (final MapEntry<String, List<RosterRow>> entry in byStopName.entries) ...<

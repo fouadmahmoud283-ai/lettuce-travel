@@ -25,47 +25,58 @@ class ParentHistoryScreen extends ConsumerWidget {
         child: AsyncValueView<List<AttendanceRecord>>(
           value: history,
           data: (List<AttendanceRecord> records) => records.isEmpty
-              ? Center(child: Text(context.l10n.historyEmpty))
+              ? AppEmptyView(message: context.l10n.historyEmpty, icon: Icons.history_rounded)
               : ListView.separated(
                   padding: const EdgeInsets.all(AppSpacing.md),
                   itemCount: records.length,
                   separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.sm),
                   itemBuilder: (BuildContext context, int index) {
                     final AttendanceRecord record = records[index];
-                    return Container(
-                      padding: const EdgeInsets.all(AppSpacing.md),
-                      decoration: BoxDecoration(
-                        color: context.colors.surfaceContainerHighest,
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-                      ),
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(record.serviceDate, style: context.text.titleSmall),
-                                if (record.boardedAtDevice != null)
-                                  Text(
-                                    '${context.l10n.checkIn}: '
-                                    '${record.boardedAtDevice!.toClockTime(context.l10n.localeName)}',
-                                    style: context.text.bodySmall,
-                                  ),
-                                if (record.droppedAtDevice != null)
-                                  Text(
-                                    '${context.l10n.checkOut}: '
-                                    '${record.droppedAtDevice!.toClockTime(context.l10n.localeName)}',
-                                    style: context.text.bodySmall,
-                                  ),
-                              ],
+                    return Material(
+                      color: context.colors.surface,
+                      elevation: 1,
+                      shadowColor: context.colors.shadow.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                      child: Padding(
+                        padding: const EdgeInsets.all(AppSpacing.md),
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                              width: 4,
+                              height: 52,
+                              decoration: BoxDecoration(
+                                color: record.status.color(),
+                                borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                              ),
                             ),
-                          ),
-                          StatusChip(
-                            label: record.status.label(context),
-                            color: record.status.color(),
-                            icon: record.status.icon(),
-                          ),
-                        ],
+                            const SizedBox(width: AppSpacing.md),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(record.serviceDate, style: context.text.titleSmall),
+                                  if (record.boardedAtDevice != null)
+                                    Text(
+                                      '${context.l10n.checkIn}: '
+                                      '${record.boardedAtDevice!.toClockTime(context.l10n.localeName)}',
+                                      style: context.text.bodySmall,
+                                    ),
+                                  if (record.droppedAtDevice != null)
+                                    Text(
+                                      '${context.l10n.checkOut}: '
+                                      '${record.droppedAtDevice!.toClockTime(context.l10n.localeName)}',
+                                      style: context.text.bodySmall,
+                                    ),
+                                ],
+                              ),
+                            ),
+                            StatusChip(
+                              label: record.status.label(context),
+                              color: record.status.color(),
+                              icon: record.status.icon(),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },

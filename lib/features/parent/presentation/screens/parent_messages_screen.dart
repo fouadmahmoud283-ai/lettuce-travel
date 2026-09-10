@@ -44,34 +44,47 @@ class _AnnouncementsTab extends ConsumerWidget {
       child: AsyncValueView<List<Announcement>>(
         value: announcements,
         data: (List<Announcement> items) => items.isEmpty
-            ? Center(child: Text(context.l10n.announcementsEmpty))
+            ? AppEmptyView(message: context.l10n.announcementsEmpty, icon: Icons.campaign_outlined)
             : ListView.separated(
                 padding: const EdgeInsets.all(AppSpacing.md),
                 itemCount: items.length,
                 separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.sm),
                 itemBuilder: (BuildContext context, int index) {
                   final Announcement a = items[index];
-                  return Container(
-                    padding: const EdgeInsets.all(AppSpacing.md),
-                    decoration: BoxDecoration(
-                      color: context.colors.surfaceContainerHighest,
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(a.title, style: context.text.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
-                        const SizedBox(height: AppSpacing.xs),
-                        Text(a.body, style: context.text.bodyMedium),
-                        if (a.createdAt != null) ...<Widget>[
-                          const SizedBox(height: AppSpacing.xs),
-                          Text(
-                            a.createdAt!.toClockTime(context.l10n.localeName),
-                            style: context.text.bodySmall
-                                ?.copyWith(color: context.colors.onSurfaceVariant),
+                  return Material(
+                    color: context.colors.surface,
+                    elevation: 1,
+                    shadowColor: context.colors.shadow.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                    child: Padding(
+                      padding: const EdgeInsets.all(AppSpacing.md),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Icon(Icons.campaign_rounded, color: context.colors.secondary),
+                              const SizedBox(width: AppSpacing.sm),
+                              Expanded(
+                                child: Text(
+                                  a.title,
+                                  style: context.text.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                            ],
                           ),
+                          const SizedBox(height: AppSpacing.sm),
+                          Text(a.body, style: context.text.bodyMedium),
+                          if (a.createdAt != null) ...<Widget>[
+                            const SizedBox(height: AppSpacing.xs),
+                            Text(
+                              a.createdAt!.toClockTime(context.l10n.localeName),
+                              style: context.text.bodySmall
+                                  ?.copyWith(color: context.colors.onSurfaceVariant),
+                            ),
+                          ],
                         ],
-                      ],
+                      ),
                     ),
                   );
                 },
@@ -107,7 +120,7 @@ class _ChatTabState extends ConsumerState<_ChatTab> {
             child: AsyncValueView<List<ChatMessage>>(
               value: messages,
               data: (List<ChatMessage> items) => items.isEmpty
-                  ? Center(child: Text(context.l10n.messagesEmpty))
+                  ? AppEmptyView(message: context.l10n.messagesEmpty, icon: Icons.chat_bubble_outline_rounded)
                   : ListView.builder(
                       reverse: true,
                       padding: const EdgeInsets.all(AppSpacing.md),
@@ -127,6 +140,11 @@ class _ChatTabState extends ConsumerState<_ChatTab> {
                             decoration: BoxDecoration(
                               color: mine ? context.colors.primaryContainer : context.colors.surfaceContainerHighest,
                               borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                              border: Border.all(
+                                color: mine
+                                    ? context.colors.primary.withValues(alpha: 0.12)
+                                    : context.colors.outlineVariant,
+                              ),
                             ),
                             child: Text(message.text),
                           ),

@@ -6,6 +6,7 @@ import 'package:lettuce_travel/core/constants/mock_ids.dart';
 import 'package:lettuce_travel/core/extensions/context_x.dart';
 import 'package:lettuce_travel/core/extensions/date_x.dart';
 import 'package:lettuce_travel/core/widgets/async_value_view.dart';
+import 'package:lettuce_travel/core/widgets/status_chip.dart';
 import 'package:lettuce_travel/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:lettuce_travel/features/messaging/data/repositories/fake_announcement_repository.dart';
 import 'package:lettuce_travel/features/messaging/domain/entities/announcement.dart';
@@ -25,49 +26,103 @@ class AdminAnnouncementsScreen extends ConsumerWidget {
         onPressed: () => showModalBottomSheet<void>(
           context: context,
           isScrollControlled: true,
+          showDragHandle: true,
           builder: (_) => const _ComposeSheet(),
         ),
         child: const Icon(Icons.add),
       ),
       body: SafeArea(
-        child: AsyncValueView<List<Announcement>>(
-          value: announcements,
-          data: (List<Announcement> items) {
-            if (items.isEmpty) return Center(child: Text(context.l10n.announcementsEmpty));
-            final List<Announcement> sorted = List<Announcement>.of(items)
-              ..sort(
-                (Announcement a, Announcement b) =>
-                    (b.createdAt ?? DateTime(0)).compareTo(a.createdAt ?? DateTime(0)),
-              );
-            return ListView.separated(
-              padding: const EdgeInsets.all(AppSpacing.md),
-              itemCount: sorted.length,
-              separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.sm),
-              itemBuilder: (BuildContext context, int index) {
-                final Announcement a = sorted[index];
-                return Container(
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  decoration: BoxDecoration(
-                    color: context.colors.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+        child: Align(
+          alignment: AlignmentDirectional.topCenter,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 760),
+            child: AsyncValueView<List<Announcement>>(
+              value: announcements,
+              data: (List<Announcement> items) {
+                if (items.isEmpty) {
+                  return AppEmptyView(message: context.l10n.announcementsEmpty, icon: Icons.campaign_outlined);
+                }
+                final List<Announcement> sorted = List<Announcement>.of(items)
+                  ..sort(
+                    (Announcement a, Announcement b) =>
+                        (b.createdAt ?? DateTime(0)).compareTo(a.createdAt ?? DateTime(0)),
+                  );
+                return ListView.separated(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.md,
+                    AppSpacing.md,
+                    AppSpacing.md,
+                    AppSpacing.xxl,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(a.title, style: context.text.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
-                      const SizedBox(height: AppSpacing.xs),
-                      Text(a.body, style: context.text.bodyMedium),
-                      const SizedBox(height: AppSpacing.xs),
-                      Text(
-                        a.createdAt == null ? '' : a.createdAt!.toClockTime(context.l10n.localeName),
-                        style: context.text.bodySmall?.copyWith(color: context.colors.onSurfaceVariant),
+                  itemCount: sorted.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.md),
+                  itemBuilder: (BuildContext context, int index) {
+                    final Announcement a = sorted[index];
+                    final bool routeScoped = a.scope == AnnouncementScope.route;
+                    return Material(
+                      color: context.colors.surface,
+                      elevation: 2,
+                      shadowColor: context.colors.shadow.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                      clipBehavior: Clip.antiAlias,
+                      child: IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: <Widget>[
+                            Container(width: 5, color: routeScoped ? context.colors.secondary : context.colors.primary),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(AppSpacing.md),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Icon(
+                                          routeScoped ? Icons.alt_route_rounded : Icons.campaign_rounded,
+                                          color: routeScoped ? context.colors.secondary : context.colors.primary,
+                                        ),
+                                        const SizedBox(width: AppSpacing.sm),
+                                        Expanded(
+                                          child: Text(
+                                            a.title,
+                                            style: context.text.titleMedium?.copyWith(fontWeight: FontWeight.w800),
+                                          ),
+                                        ),
+                                        StatusChip(
+                                          label: routeScoped
+                                              ? context.l10n.announcementScopeRoute
+                                              : context.l10n.announcementScopeSchool,
+                                          color: routeScoped ? context.colors.secondary : context.colors.primary,
+                                          dense: true,
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: AppSpacing.sm),
+                                    Text(a.body, style: context.text.bodyMedium),
+                                    const SizedBox(height: AppSpacing.md),
+                                    Text(
+                                      a.createdAt == null
+                                          ? ''
+                                          : a.createdAt!.toClockTime(context.l10n.localeName),
+                                      style: context.text.labelMedium?.copyWith(
+                                        color: context.colors.onSurfaceVariant,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
+                    );
+                  },
                 );
               },
-            );
-          },
+            ),
+          ),
         ),
       ),
     );
@@ -108,20 +163,48 @@ class _ComposeSheetState extends ConsumerState<_ComposeSheet> {
   @override
   Widget build(BuildContext context) {
     final AsyncValue<List<BusRoute>> routes = ref.watch(_routesForAnnouncementsProvider);
-    return Padding(
-      padding: EdgeInsets.only(
-        left: AppSpacing.md,
-        right: AppSpacing.md,
-        top: AppSpacing.md,
-        bottom: MediaQuery.viewInsetsOf(context).bottom + AppSpacing.md,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Text(context.l10n.announcements, style: context.text.titleLarge),
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: EdgeInsets.only(
+          left: AppSpacing.md,
+          right: AppSpacing.md,
+          top: AppSpacing.sm,
+          bottom: MediaQuery.viewInsetsOf(context).bottom + AppSpacing.md,
+        ),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 640),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: context.colors.outlineVariant,
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                  ),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.md),
+              Row(
+                children: <Widget>[
+                  CircleAvatar(
+                    backgroundColor: context.colors.primaryContainer,
+                    foregroundColor: context.colors.onPrimaryContainer,
+                    child: const Icon(Icons.campaign_rounded),
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Text(context.l10n.announcements, style: context.text.titleLarge),
+                ],
+              ),
           const SizedBox(height: AppSpacing.md),
-          TextField(controller: _title, decoration: const InputDecoration(labelText: 'Title')),
+          TextField(
+            controller: _title,
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(labelText: context.l10n.announcements),
+          ),
           const SizedBox(height: AppSpacing.sm),
           TextField(
             controller: _body,
@@ -165,7 +248,9 @@ class _ComposeSheetState extends ConsumerState<_ComposeSheet> {
                 ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
                 : Text(context.l10n.announcementPublish),
           ),
-        ],
+            ],
+          ),
+        ),
       ),
     );
   }

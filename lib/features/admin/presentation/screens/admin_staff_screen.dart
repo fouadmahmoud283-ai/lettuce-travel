@@ -26,7 +26,7 @@ class AdminStaffScreen extends ConsumerWidget {
         child: AsyncValueView<List<BusRoute>>(
           value: routes,
           data: (List<BusRoute> items) => items.isEmpty
-              ? Center(child: Text(context.l10n.noData))
+              ? AppEmptyView(message: context.l10n.noData, icon: Icons.badge_outlined)
               : ListView.builder(
                   padding: const EdgeInsets.all(AppSpacing.md),
                   itemCount: items.length,
@@ -36,7 +36,11 @@ class AdminStaffScreen extends ConsumerWidget {
                         MockIds.supervisorNames[route.supervisorId] ?? context.l10n.notSet;
                     return Card(
                       child: ListTile(
-                        leading: const CircleAvatar(child: Icon(Icons.badge_outlined)),
+                        leading: CircleAvatar(
+                          backgroundColor: context.colors.secondaryContainer,
+                          foregroundColor: context.colors.onSecondaryContainer,
+                          child: const Icon(Icons.badge_outlined),
+                        ),
                         title: Text(name),
                         subtitle: Text('${context.l10n.routeLabel}: ${route.name}'),
                       ),

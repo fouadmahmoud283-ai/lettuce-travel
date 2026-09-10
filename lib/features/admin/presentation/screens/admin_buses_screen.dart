@@ -21,6 +21,7 @@ class AdminBusesScreen extends ConsumerWidget {
         onPressed: () => showModalBottomSheet<void>(
           context: context,
           isScrollControlled: true,
+          showDragHandle: true,
           builder: (_) => const _BusFormSheet(),
         ),
         child: const Icon(Icons.add),
@@ -29,7 +30,7 @@ class AdminBusesScreen extends ConsumerWidget {
         child: AsyncValueView<List<Bus>>(
           value: buses,
           data: (List<Bus> items) => items.isEmpty
-              ? Center(child: Text(context.l10n.noData))
+              ? AppEmptyView(message: context.l10n.noData, icon: Icons.directions_bus_outlined)
               : ListView.builder(
                   padding: const EdgeInsets.all(AppSpacing.md),
                   itemCount: items.length,
@@ -37,13 +38,36 @@ class AdminBusesScreen extends ConsumerWidget {
                     final Bus bus = items[index];
                     return Card(
                       child: ListTile(
-                        leading: const Icon(Icons.directions_bus_outlined),
+                        leading: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: context.colors.primaryContainer,
+                            borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(AppSpacing.sm),
+                            child: Icon(
+                              Icons.directions_bus_outlined,
+                              color: context.colors.onPrimaryContainer,
+                            ),
+                          ),
+                        ),
                         title: Text(bus.plateNumber),
                         subtitle: Text('${bus.model} · ${bus.driverName}'),
-                        trailing: Text('${bus.capacity}'),
+                        trailing: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: <Widget>[
+                            Text(
+                              '${bus.capacity}',
+                              style: context.text.titleMedium?.copyWith(fontWeight: FontWeight.w800),
+                            ),
+                            Text(context.l10n.busCapacityLabel, style: context.text.labelSmall),
+                          ],
+                        ),
                         onTap: () => showModalBottomSheet<void>(
                           context: context,
                           isScrollControlled: true,
+                          showDragHandle: true,
                           builder: (_) => _BusFormSheet(bus: bus),
                         ),
                       ),

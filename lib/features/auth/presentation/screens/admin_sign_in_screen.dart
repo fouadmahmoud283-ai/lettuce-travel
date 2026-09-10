@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:lettuce_travel/app/theme/app_spacing.dart';
 import 'package:lettuce_travel/core/errors/failure_x.dart';
 import 'package:lettuce_travel/core/extensions/context_x.dart';
+import 'package:lettuce_travel/core/widgets/app_logo_mark.dart';
+import 'package:lettuce_travel/core/widgets/demo_hint_banner.dart';
 import 'package:lettuce_travel/features/auth/presentation/controllers/auth_controller.dart';
 
 /// Email + password sign-in, used only by the super admin (FR-1 in
@@ -39,6 +41,8 @@ class _AdminSignInScreenState extends ConsumerState<AdminSignInScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
+                const SizedBox(height: AppSpacing.lg),
+                const Center(child: AppLogoMark(size: 64, onLight: true)),
                 const SizedBox(height: AppSpacing.xl),
                 TextField(
                   controller: _emailController,
@@ -70,10 +74,7 @@ class _AdminSignInScreenState extends ConsumerState<AdminSignInScreen> {
                   onSubmitted: (_) => _submit(),
                 ),
                 const SizedBox(height: AppSpacing.sm),
-                Text(
-                  context.l10n.demoAdminHint,
-                  style: context.text.bodySmall?.copyWith(color: context.colors.onSurfaceVariant),
-                ),
+                DemoHintBanner(text: context.l10n.demoAdminHint),
                 const SizedBox(height: AppSpacing.lg),
                 FilledButton(
                   onPressed: _submitting ? null : _submit,

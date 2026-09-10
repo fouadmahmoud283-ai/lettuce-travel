@@ -24,7 +24,7 @@ class AdminIncidentsScreen extends ConsumerWidget {
         child: AsyncValueView<List<Incident>>(
           value: incidents,
           data: (List<Incident> items) {
-            if (items.isEmpty) return Center(child: Text(context.l10n.noData));
+            if (items.isEmpty) return AppEmptyView(message: context.l10n.noData, icon: Icons.report_gmailerrorred_outlined);
             final List<Incident> sorted = List<Incident>.of(items)
               ..sort(
                 (Incident a, Incident b) =>
@@ -53,13 +53,27 @@ class _IncidentCard extends ConsumerWidget {
   final Incident incident;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => Container(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        decoration: BoxDecoration(
-          color: context.colors.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-        ),
-        child: Column(
+  Widget build(BuildContext context, WidgetRef ref) => Material(
+        color: context.colors.surface,
+        elevation: 1,
+        shadowColor: context.colors.shadow.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.md),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                width: 4,
+                height: 104,
+                decoration: BoxDecoration(
+                  color: incident.severity.color(),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                ),
+              ),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Row(
@@ -73,7 +87,6 @@ class _IncidentCard extends ConsumerWidget {
                   dense: true,
                 ),
               ],
-            ),
             if (incident.note.isNotEmpty) ...<Widget>[
               const SizedBox(height: AppSpacing.xs),
               Text(incident.note, style: context.text.bodyMedium),
@@ -107,6 +120,11 @@ class _IncidentCard extends ConsumerWidget {
               ],
             ),
           ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       );
 

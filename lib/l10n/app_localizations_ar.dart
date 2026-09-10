@@ -384,6 +384,9 @@ class AppL10nAr extends AppL10n {
   String get administration => 'الإدارة';
 
   @override
+  String get adminHeroSubtitle => 'المدارس والحافلات والخطوط وكل من يديرها';
+
+  @override
   String get dashboardBusesOnRoad => 'حافلات في الطريق';
 
   @override
