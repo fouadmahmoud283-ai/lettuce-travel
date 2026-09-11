@@ -203,8 +203,8 @@ final Provider<GoRouter> appRouterProvider = Provider<GoRouter>((Ref ref) {
           navigationShell: shell,
           destinations: <ShellDestination>[
             ShellDestination(
-              icon: PhosphorIconsRegular.busFront,
-              selectedIcon: PhosphorIconsFill.busFront,
+              icon: PhosphorIconsRegular.bus,
+              selectedIcon: PhosphorIconsFill.bus,
               label: context.l10n.navTrips,
             ),
             ShellDestination(

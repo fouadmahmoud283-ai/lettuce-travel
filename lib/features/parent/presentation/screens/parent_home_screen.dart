@@ -58,18 +58,24 @@ class _OverviewHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final int onBoard = summaries
-        .where((ParentChildSummary summary) =>
-            summary.todayRecord?.status == AttendanceStatus.onBoard)
+        .where(
+          (ParentChildSummary summary) =>
+              summary.todayRecord?.status == AttendanceStatus.onBoard,
+        )
         .length;
     final int droppedOff = summaries
-        .where((ParentChildSummary summary) =>
-            summary.todayRecord?.status == AttendanceStatus.droppedOff)
+        .where(
+          (ParentChildSummary summary) =>
+              summary.todayRecord?.status == AttendanceStatus.droppedOff,
+        )
         .length;
     final int waiting = summaries
-      .where((ParentChildSummary summary) =>
-        (summary.todayRecord?.status ?? AttendanceStatus.pending) ==
-        AttendanceStatus.pending)
-      .length;
+        .where(
+          (ParentChildSummary summary) =>
+              (summary.todayRecord?.status ?? AttendanceStatus.pending) ==
+              AttendanceStatus.pending,
+        )
+        .length;
     return GradientHeroHeader(
       title: context.l10n.today,
       subtitle: context.l10n.myChildren,
