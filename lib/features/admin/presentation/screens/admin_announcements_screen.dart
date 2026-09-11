@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:lettuce_travel/app/theme/app_spacing.dart';
@@ -117,7 +118,10 @@ class AdminAnnouncementsScreen extends ConsumerWidget {
                           ],
                         ),
                       ),
-                    );
+                    ).animate().fadeIn(
+                          delay: Duration(milliseconds: (index * 40).clamp(0, 400)),
+                          duration: 280.ms,
+                        ).slideY(begin: 0.04, end: 0);
                   },
                 );
               },

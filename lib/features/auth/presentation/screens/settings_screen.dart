@@ -9,8 +9,11 @@ import 'package:lettuce_travel/core/extensions/context_x.dart';
 import 'package:lettuce_travel/core/widgets/confirm_dialog.dart';
 import 'package:lettuce_travel/features/auth/presentation/controllers/auth_controller.dart';
 
-/// Shared across all three roles: language and sign-out. Reachable from any
-/// role's home screen (see the redirect-guard exception in app_router.dart).
+/// Shared across all three roles: language and sign-out.
+///
+/// Used two ways: as the Profile/Settings tab body for the supervisor and
+/// parent shells, and as a directly pushed `/settings` route reachable from
+/// the admin "More" tab (see the redirect-guard exception in app_router.dart).
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
@@ -23,7 +26,12 @@ class SettingsScreen extends ConsumerWidget {
       appBar: AppBar(title: Text(context.l10n.settings)),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(AppSpacing.md),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.md,
+            AppSpacing.md,
+            AppSpacing.md,
+            AppSpacing.navBarClearance,
+          ),
           children: <Widget>[
             if (auth.user != null)
               Card(

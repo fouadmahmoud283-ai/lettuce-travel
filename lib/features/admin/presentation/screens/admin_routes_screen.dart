@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:lettuce_travel/app/theme/app_spacing.dart';
@@ -27,7 +28,13 @@ class AdminRoutesScreen extends ConsumerWidget {
               : ListView.builder(
                   padding: const EdgeInsets.all(AppSpacing.md),
                   itemCount: items.length,
-                  itemBuilder: (BuildContext context, int index) => _RouteCard(route: items[index]),
+                  itemBuilder: (BuildContext context, int index) => _RouteCard(route: items[index])
+                      .animate()
+                      .fadeIn(
+                        delay: Duration(milliseconds: (index * 40).clamp(0, 400)),
+                        duration: 260.ms,
+                      )
+                      .slideX(begin: 0.03, end: 0),
                 ),
         ),
       ),

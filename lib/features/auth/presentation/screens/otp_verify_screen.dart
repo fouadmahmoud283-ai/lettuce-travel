@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lettuce_travel/app/theme/app_spacing.dart';
 import 'package:lettuce_travel/core/errors/failure_x.dart';
 import 'package:lettuce_travel/core/extensions/context_x.dart';
+import 'package:lettuce_travel/core/widgets/app_logo_mark.dart';
 import 'package:lettuce_travel/features/auth/presentation/controllers/auth_controller.dart';
 
 /// SMS code entry: six digit boxes with auto-advance, and a 60-second resend
@@ -70,6 +71,8 @@ class _OtpVerifyScreenState extends ConsumerState<OtpVerifyScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
+                const Center(child: AppLogoMark(size: 64, onLight: true)),
+                const SizedBox(height: AppSpacing.lg),
                 Text(context.l10n.verificationCode, style: context.text.headlineSmall),
                 const SizedBox(height: AppSpacing.xs),
                 Text(

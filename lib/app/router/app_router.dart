@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import 'package:lettuce_travel/app/router/route_paths.dart';
+import 'package:lettuce_travel/app/shell/role_shell_scaffold.dart';
+import 'package:lettuce_travel/core/extensions/context_x.dart';
 import 'package:lettuce_travel/features/admin/presentation/screens/admin_announcements_screen.dart';
 import 'package:lettuce_travel/features/admin/presentation/screens/admin_buses_screen.dart';
-import 'package:lettuce_travel/features/admin/presentation/screens/admin_home_screen.dart';
+import 'package:lettuce_travel/features/admin/presentation/screens/admin_dashboard_tab_screen.dart';
 import 'package:lettuce_travel/features/admin/presentation/screens/admin_incidents_screen.dart';
 import 'package:lettuce_travel/features/admin/presentation/screens/admin_live_trips_screen.dart';
+import 'package:lettuce_travel/features/admin/presentation/screens/admin_more_screen.dart';
 import 'package:lettuce_travel/features/admin/presentation/screens/admin_reports_screen.dart';
 import 'package:lettuce_travel/features/admin/presentation/screens/admin_routes_screen.dart';
 import 'package:lettuce_travel/features/admin/presentation/screens/admin_schools_screen.dart';
@@ -35,6 +39,14 @@ import 'package:lettuce_travel/features/supervisor/presentation/screens/trip_ros
 /// Redirect logic is the single gate between the three role experiences.
 /// A user must never be able to reach another role's subtree, by deep link or
 /// otherwise — see invariant 5 in AGENTS.md.
+///
+/// Each role's routes are a [StatefulShellRoute.indexedStack]: a persistent
+/// floating bottom nav (see `app/shell/role_shell_scaffold.dart`) with two to
+/// four tabs, each an independent navigation stack. Full-screen drill-down
+/// routes (a specific student, a specific trip's roster, admin CRUD screens)
+/// are declared as siblings of the shell, outside its branches, so pushing
+/// one covers the bottom nav entirely — the conventional go_router pattern
+/// for "detail screens that hide the tab bar".
 final Provider<GoRouter> appRouterProvider = Provider<GoRouter>((Ref ref) {
   final AuthState auth = ref.watch(authControllerProvider);
 
@@ -98,10 +110,59 @@ final Provider<GoRouter> appRouterProvider = Provider<GoRouter>((Ref ref) {
         builder: (_, __) => const SettingsScreen(),
       ),
 
-      // --- Super admin subtree ---
-      GoRoute(
-        path: RoutePaths.adminHome,
-        builder: (_, __) => const AdminHomeScreen(),
+      // ======================================================================
+      // Super admin: 4-tab shell (Dashboard / Live / Reports / More) plus
+      // full-screen CRUD sections pushed on top of it.
+      // ======================================================================
+      StatefulShellRoute.indexedStack(
+        builder: (BuildContext context, GoRouterState state, StatefulNavigationShell shell) =>
+            RoleShellScaffold(
+          navigationShell: shell,
+          destinations: <ShellDestination>[
+            ShellDestination(
+              icon: PhosphorIconsRegular.squaresFour,
+              selectedIcon: PhosphorIconsFill.squaresFour,
+              label: context.l10n.navDashboard,
+            ),
+            ShellDestination(
+              icon: PhosphorIconsRegular.mapTrifold,
+              selectedIcon: PhosphorIconsFill.mapTrifold,
+              label: context.l10n.navLive,
+            ),
+            ShellDestination(
+              icon: PhosphorIconsRegular.chartBar,
+              selectedIcon: PhosphorIconsFill.chartBar,
+              label: context.l10n.reports,
+            ),
+            ShellDestination(
+              icon: PhosphorIconsRegular.dotsThreeCircle,
+              selectedIcon: PhosphorIconsFill.dotsThreeCircle,
+              label: context.l10n.moreTabLabel,
+            ),
+          ],
+        ),
+        branches: <StatefulShellBranch>[
+          StatefulShellBranch(
+            routes: <RouteBase>[
+              GoRoute(path: RoutePaths.adminHome, builder: (_, __) => const AdminDashboardTabScreen()),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: <RouteBase>[
+              GoRoute(path: RoutePaths.adminLiveTrips, builder: (_, __) => const AdminLiveTripsScreen()),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: <RouteBase>[
+              GoRoute(path: RoutePaths.adminReports, builder: (_, __) => const AdminReportsScreen()),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: <RouteBase>[
+              GoRoute(path: RoutePaths.adminMore, builder: (_, __) => const AdminMoreScreen()),
+            ],
+          ),
+        ],
       ),
       GoRoute(
         path: RoutePaths.adminSchools,
@@ -124,14 +185,6 @@ final Provider<GoRouter> appRouterProvider = Provider<GoRouter>((Ref ref) {
         builder: (_, __) => const AdminStaffScreen(),
       ),
       GoRoute(
-        path: RoutePaths.adminLiveTrips,
-        builder: (_, __) => const AdminLiveTripsScreen(),
-      ),
-      GoRoute(
-        path: RoutePaths.adminReports,
-        builder: (_, __) => const AdminReportsScreen(),
-      ),
-      GoRoute(
         path: RoutePaths.adminIncidents,
         builder: (_, __) => const AdminIncidentsScreen(),
       ),
@@ -140,51 +193,110 @@ final Provider<GoRouter> appRouterProvider = Provider<GoRouter>((Ref ref) {
         builder: (_, __) => const AdminAnnouncementsScreen(),
       ),
 
-      // --- Supervisor subtree ---
-      GoRoute(
-        path: RoutePaths.supervisorHome,
-        builder: (_, __) => const SupervisorHomeScreen(),
-        routes: <RouteBase>[
-          GoRoute(
-            path: 'trip/:tripId/roster',
-            builder: (BuildContext context, GoRouterState state) =>
-                TripRosterScreen(
-              tripId: state.pathParameters['tripId']!,
+      // ======================================================================
+      // Bus supervisor: 2-tab shell (Trips / Profile) plus the full-screen
+      // roster, which deliberately hides the bottom nav while a trip is live.
+      // ======================================================================
+      StatefulShellRoute.indexedStack(
+        builder: (BuildContext context, GoRouterState state, StatefulNavigationShell shell) =>
+            RoleShellScaffold(
+          navigationShell: shell,
+          destinations: <ShellDestination>[
+            ShellDestination(
+              icon: PhosphorIconsRegular.busFront,
+              selectedIcon: PhosphorIconsFill.busFront,
+              label: context.l10n.navTrips,
             ),
+            ShellDestination(
+              icon: PhosphorIconsRegular.userCircle,
+              selectedIcon: PhosphorIconsFill.userCircle,
+              label: context.l10n.settings,
+            ),
+          ],
+        ),
+        branches: <StatefulShellBranch>[
+          StatefulShellBranch(
+            routes: <RouteBase>[
+              GoRoute(path: RoutePaths.supervisorHome, builder: (_, __) => const SupervisorHomeScreen()),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: <RouteBase>[
+              GoRoute(path: RoutePaths.supervisorProfile, builder: (_, __) => const SettingsScreen()),
+            ],
           ),
         ],
       ),
-
-      // --- Parent subtree ---
       GoRoute(
-        path: RoutePaths.parentHome,
-        builder: (_, __) => const ParentHomeScreen(),
-        routes: <RouteBase>[
-          GoRoute(
-            path: 'child/:studentId',
-            builder: (BuildContext context, GoRouterState state) =>
-                ParentChildScreen(studentId: state.pathParameters['studentId']!),
+        path: RoutePaths.supervisorRoster,
+        builder: (BuildContext context, GoRouterState state) => TripRosterScreen(
+          tripId: state.pathParameters['tripId']!,
+        ),
+      ),
+
+      // ======================================================================
+      // Parent: 3-tab shell (Home / Messages / Profile) plus full-screen child
+      // detail, live map, history and absence routes.
+      // ======================================================================
+      StatefulShellRoute.indexedStack(
+        builder: (BuildContext context, GoRouterState state, StatefulNavigationShell shell) =>
+            RoleShellScaffold(
+          navigationShell: shell,
+          destinations: <ShellDestination>[
+            ShellDestination(
+              icon: PhosphorIconsRegular.house,
+              selectedIcon: PhosphorIconsFill.house,
+              label: context.l10n.myChildren,
+            ),
+            ShellDestination(
+              icon: PhosphorIconsRegular.chatCircleDots,
+              selectedIcon: PhosphorIconsFill.chatCircleDots,
+              label: context.l10n.messagesTitle,
+            ),
+            ShellDestination(
+              icon: PhosphorIconsRegular.userCircle,
+              selectedIcon: PhosphorIconsFill.userCircle,
+              label: context.l10n.settings,
+            ),
+          ],
+        ),
+        branches: <StatefulShellBranch>[
+          StatefulShellBranch(
             routes: <RouteBase>[
-              GoRoute(
-                path: 'live',
-                builder: (BuildContext context, GoRouterState state) =>
-                    ParentLiveMapScreen(studentId: state.pathParameters['studentId']!),
-              ),
-              GoRoute(
-                path: 'history',
-                builder: (BuildContext context, GoRouterState state) =>
-                    ParentHistoryScreen(studentId: state.pathParameters['studentId']!),
-              ),
-              GoRoute(
-                path: 'absence',
-                builder: (BuildContext context, GoRouterState state) =>
-                    ParentAbsenceScreen(studentId: state.pathParameters['studentId']!),
-              ),
+              GoRoute(path: RoutePaths.parentHome, builder: (_, __) => const ParentHomeScreen()),
             ],
           ),
+          StatefulShellBranch(
+            routes: <RouteBase>[
+              GoRoute(path: RoutePaths.parentMessages, builder: (_, __) => const ParentMessagesScreen()),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: <RouteBase>[
+              GoRoute(path: RoutePaths.parentProfile, builder: (_, __) => const SettingsScreen()),
+            ],
+          ),
+        ],
+      ),
+      GoRoute(
+        path: RoutePaths.parentChild,
+        builder: (BuildContext context, GoRouterState state) =>
+            ParentChildScreen(studentId: state.pathParameters['studentId']!),
+        routes: <RouteBase>[
           GoRoute(
-            path: 'messages',
-            builder: (_, __) => const ParentMessagesScreen(),
+            path: 'live',
+            builder: (BuildContext context, GoRouterState state) =>
+                ParentLiveMapScreen(studentId: state.pathParameters['studentId']!),
+          ),
+          GoRoute(
+            path: 'history',
+            builder: (BuildContext context, GoRouterState state) =>
+                ParentHistoryScreen(studentId: state.pathParameters['studentId']!),
+          ),
+          GoRoute(
+            path: 'absence',
+            builder: (BuildContext context, GoRouterState state) =>
+                ParentAbsenceScreen(studentId: state.pathParameters['studentId']!),
           ),
         ],
       ),

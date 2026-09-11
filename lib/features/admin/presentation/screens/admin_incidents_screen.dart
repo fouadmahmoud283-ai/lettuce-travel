@@ -74,53 +74,56 @@ class _IncidentCard extends ConsumerWidget {
               const SizedBox(width: AppSpacing.md),
               Expanded(
                 child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Icon(incident.type.icon(), color: incident.severity.color()),
-                const SizedBox(width: AppSpacing.sm),
-                Expanded(child: Text(incident.type.label(context), style: context.text.titleSmall)),
-                StatusChip(
-                  label: incident.severity.label(context),
-                  color: incident.severity.color(),
-                  dense: true,
-                ),
-              ],
-            if (incident.note.isNotEmpty) ...<Widget>[
-              const SizedBox(height: AppSpacing.xs),
-              Text(incident.note, style: context.text.bodyMedium),
-            ],
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              incident.createdAt == null
-                  ? ''
-                  : incident.createdAt!.toClockTime(context.l10n.localeName),
-              style: context.text.bodySmall?.copyWith(color: context.colors.onSurfaceVariant),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            Row(
-              children: <Widget>[
-                StatusChip(
-                  label: incident.isOpen ? context.l10n.openLabel : context.l10n.incidentResolved,
-                  color: incident.isOpen ? context.colors.error : context.colors.primary,
-                  dense: true,
-                ),
-                const Spacer(),
-                if (incident.acknowledgedBy == null)
-                  TextButton(
-                    onPressed: () => _acknowledge(ref),
-                    child: Text(context.l10n.acknowledgeIncident),
-                  ),
-                if (incident.isOpen)
-                  TextButton(
-                    onPressed: () => ref.read(incidentRepositoryProvider).resolveIncident(incident.id),
-                    child: Text(context.l10n.resolveIncident),
-                  ),
-              ],
-            ),
-          ],
-                  ),
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Icon(incident.type.icon(), color: incident.severity.color()),
+                        const SizedBox(width: AppSpacing.sm),
+                        Expanded(
+                          child: Text(incident.type.label(context), style: context.text.titleSmall),
+                        ),
+                        StatusChip(
+                          label: incident.severity.label(context),
+                          color: incident.severity.color(),
+                          dense: true,
+                        ),
+                      ],
+                    ),
+                    if (incident.note.isNotEmpty) ...<Widget>[
+                      const SizedBox(height: AppSpacing.xs),
+                      Text(incident.note, style: context.text.bodyMedium),
+                    ],
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      incident.createdAt == null
+                          ? ''
+                          : incident.createdAt!.toClockTime(context.l10n.localeName),
+                      style: context.text.bodySmall?.copyWith(color: context.colors.onSurfaceVariant),
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    Row(
+                      children: <Widget>[
+                        StatusChip(
+                          label: incident.isOpen ? context.l10n.openLabel : context.l10n.incidentResolved,
+                          color: incident.isOpen ? context.colors.error : context.colors.primary,
+                          dense: true,
+                        ),
+                        const Spacer(),
+                        if (incident.acknowledgedBy == null)
+                          TextButton(
+                            onPressed: () => _acknowledge(ref),
+                            child: Text(context.l10n.acknowledgeIncident),
+                          ),
+                        if (incident.isOpen)
+                          TextButton(
+                            onPressed: () =>
+                                ref.read(incidentRepositoryProvider).resolveIncident(incident.id),
+                            child: Text(context.l10n.resolveIncident),
+                          ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ],

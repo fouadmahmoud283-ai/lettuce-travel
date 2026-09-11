@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:lettuce_travel/app/theme/app_spacing.dart';
@@ -71,7 +72,10 @@ class AdminBusesScreen extends ConsumerWidget {
                           builder: (_) => _BusFormSheet(bus: bus),
                         ),
                       ),
-                    );
+                    ).animate().fadeIn(
+                          delay: Duration(milliseconds: (index * 40).clamp(0, 400)),
+                          duration: 260.ms,
+                        ).slideX(begin: 0.03, end: 0);
                   },
                 ),
         ),

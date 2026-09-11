@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:lettuce_travel/app/router/route_paths.dart';
+import 'package:lettuce_travel/app/theme/app_colors.dart';
 import 'package:lettuce_travel/app/theme/app_spacing.dart';
 import 'package:lettuce_travel/core/constants/mock_ids.dart';
 import 'package:lettuce_travel/core/extensions/context_x.dart';
 import 'package:lettuce_travel/core/widgets/async_value_view.dart';
 import 'package:lettuce_travel/core/widgets/child_avatar.dart';
+import 'package:lettuce_travel/core/widgets/glass_surface.dart';
 import 'package:lettuce_travel/core/widgets/section_header.dart';
 import 'package:lettuce_travel/features/parent/presentation/controllers/parent_child_controller.dart';
 import 'package:lettuce_travel/features/schools/domain/entities/bus_route.dart';
@@ -36,46 +39,60 @@ class ParentChildScreen extends ConsumerWidget {
             return ListView(
               padding: const EdgeInsets.all(AppSpacing.md),
               children: <Widget>[
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: context.colors.primaryContainer,
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppSpacing.lg),
-                    child: Row(
-                      children: <Widget>[
-                        ChildAvatar(
-                          initials: student.initials,
-                          photoUrl: student.photoUrl,
-                          size: 72,
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                  child: Stack(
+                    children: <Widget>[
+                      Positioned.fill(
+                        child: MeshGradientBackground(
+                          colors: AppColors.heroMeshGradient,
+                          borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                         ),
-                        const SizedBox(width: AppSpacing.md),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                student.fullName,
-                                style: context.text.headlineSmall?.copyWith(
-                                  color: context.colors.onPrimaryContainer,
-                                  fontWeight: FontWeight.w800,
-                                ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(AppSpacing.lg),
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                              padding: const EdgeInsets.all(3),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.white.withValues(alpha: 0.7), width: 2),
                               ),
-                              if (student.gradeOrClass.isNotEmpty)
-                                Text(
-                                  student.gradeOrClass,
-                                  style: context.text.bodyMedium?.copyWith(
-                                    color: context.colors.onPrimaryContainer.withValues(alpha: 0.78),
+                              child: ChildAvatar(
+                                initials: student.initials,
+                                photoUrl: student.photoUrl,
+                                size: 68,
+                              ),
+                            ),
+                            const SizedBox(width: AppSpacing.md),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    student.fullName,
+                                    style: context.text.headlineSmall?.copyWith(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w800,
+                                    ),
                                   ),
-                                ),
-                            ],
-                          ),
+                                  if (student.gradeOrClass.isNotEmpty)
+                                    Text(
+                                      student.gradeOrClass,
+                                      style: context.text.bodyMedium?.copyWith(
+                                        color: Colors.white.withValues(alpha: 0.82),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ),
+                ).animate().fadeIn(duration: 380.ms).slideY(begin: 0.06, end: 0),
                 const SizedBox(height: AppSpacing.lg),
                 SectionHeader(title: context.l10n.routeLabel),
                 AsyncValueView<BusRoute?>(
@@ -124,14 +141,14 @@ class ParentChildScreen extends ConsumerWidget {
                               'studentId': studentId,
                             }),
                           ),
-                ),
+                ).animate().fadeIn(delay: 80.ms, duration: 300.ms).slideX(begin: 0.04, end: 0),
                 _ActionTile(
                   icon: Icons.history_rounded,
                   label: context.l10n.rideHistory,
                   onTap: () => context.push(
                     RoutePaths.of(RoutePaths.parentHistory, <String, String>{'studentId': studentId}),
                   ),
-                ),
+                ).animate().fadeIn(delay: 140.ms, duration: 300.ms).slideX(begin: 0.04, end: 0),
                 _ActionTile(
                   icon: Icons.event_busy_outlined,
                   label: context.l10n.reportAbsence,
@@ -140,7 +157,7 @@ class ParentChildScreen extends ConsumerWidget {
                       'studentId': studentId,
                     }),
                   ),
-                ),
+                ).animate().fadeIn(delay: 200.ms, duration: 300.ms).slideX(begin: 0.04, end: 0),
               ],
             );
           },

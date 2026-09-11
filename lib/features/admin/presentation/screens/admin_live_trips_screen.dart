@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:lettuce_travel/app/theme/app_spacing.dart';
@@ -30,13 +31,20 @@ class AdminLiveTripsScreen extends ConsumerWidget {
           data: (List<Trip> items) => items.isEmpty
               ? AppEmptyView(message: context.l10n.noActiveTrip, icon: Icons.map_outlined)
               : ListView.builder(
-                  padding: const EdgeInsets.all(AppSpacing.md),
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.md,
+                    AppSpacing.md,
+                    AppSpacing.md,
+                    AppSpacing.navBarClearance,
+                  ),
                   itemCount: items.length,
-                  itemBuilder: (BuildContext context, int index) =>
-                      Padding(
+                  itemBuilder: (BuildContext context, int index) => Padding(
                     padding: const EdgeInsets.only(bottom: AppSpacing.md),
                     child: _LiveTripCard(trip: items[index]),
-                  ),
+                  ).animate().fadeIn(
+                        delay: Duration(milliseconds: (index * 60).clamp(0, 400)),
+                        duration: 300.ms,
+                      ).slideY(begin: 0.04, end: 0),
                 ),
         ),
       ),

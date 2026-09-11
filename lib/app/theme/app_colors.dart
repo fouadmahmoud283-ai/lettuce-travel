@@ -28,4 +28,22 @@ abstract final class AppColors {
   // Neutrals
   static const Color surfaceLight = Color(0xFFF7FAF5);
   static const Color surfaceDark = Color(0xFF101918);
+
+  // --- Glassmorphism / gradient-mesh accents ---
+  // Used by GradientHeroHeader, GlassCard and the floating bottom nav shell.
+  // A three-stop mesh reads as "premium" rather than a flat two-colour blend.
+  static const Color meshTeal = Color(0xFF0E5652);
+  static const Color meshViolet = Color(0xFF3A3170);
+  static const Color meshCoral = Color(0xFFE76F51);
+
+  static const List<Color> heroMeshGradient = <Color>[meshTeal, meshViolet, meshCoral];
+
+  /// Glass tint over a dark backdrop (hero headers, dark bottom nav).
+  static Color glassTintDark(double opacity) => Colors.white.withValues(alpha: opacity);
+
+  /// Glass tint over a light backdrop (cards on a plain scaffold background).
+  static Color glassTintLight(double opacity) => Colors.white.withValues(alpha: opacity);
+
+  static const Color glowTeal = Color(0xFF20C7BB);
+  static const Color glowCoral = Color(0xFFFF8A65);
 }
