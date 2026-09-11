@@ -69,8 +69,8 @@ class _OtpVerifyScreenState extends ConsumerState<OtpVerifyScreen> {
         appBar: AppBar(),
         body: Stack(
           children: <Widget>[
-            Positioned.fill(
-              child: const DecorativeBlobs(
+            const Positioned.fill(
+              child: DecorativeBlobs(
                 colors: <Color>[AppColors.secondary, AppColors.primary],
               ),
             ),

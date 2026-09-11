@@ -49,8 +49,8 @@ class _PhoneSignInScreenState extends ConsumerState<PhoneSignInScreen> {
         ),
         body: Stack(
           children: <Widget>[
-            Positioned.fill(
-              child: const DecorativeBlobs(
+            const Positioned.fill(
+              child: DecorativeBlobs(
                 colors: <Color>[AppColors.primary, AppColors.tertiary],
               ),
             ),

@@ -39,8 +39,8 @@ class _AdminSignInScreenState extends ConsumerState<AdminSignInScreen> {
         appBar: AppBar(title: Text(context.l10n.adminSignIn)),
         body: Stack(
           children: <Widget>[
-            Positioned.fill(
-              child: const DecorativeBlobs(
+            const Positioned.fill(
+              child: DecorativeBlobs(
                 colors: <Color>[AppColors.meshViolet, AppColors.primary],
               ),
             ),
