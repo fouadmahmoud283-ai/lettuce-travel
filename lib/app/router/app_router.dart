@@ -30,18 +30,60 @@ import 'package:lettuce_travel/features/parent/presentation/screens/parent_messa
 import 'package:lettuce_travel/features/supervisor/presentation/screens/supervisor_home_screen.dart';
 import 'package:lettuce_travel/features/supervisor/presentation/screens/trip_roster_screen.dart';
 
+/// Bridges [authControllerProvider] into a [Listenable] for go_router's
+/// `refreshListenable`, notifying only when something that actually changes
+/// *where a user is allowed to be* changes (signed-in-ness or role) —
+/// deliberately not on every [AuthState] mutation (e.g. `pendingVerificationId`
+/// while the OTP flow is mid-flight).
+///
+/// This is the difference between "re-evaluate redirect on the existing
+/// router" (correct) and "throw away the router and its navigation stack"
+/// (the bug this replaced: a `Provider<GoRouter>` that did `ref.watch`
+/// rebuilt a brand new `GoRouter` on every auth change, which resets to
+/// `initialLocation` — so `context.push` to the OTP screen right after
+/// `sendOtp` was silently undone by the reset landing back on sign-in).
+class _AuthRouterRefresh extends ChangeNotifier {
+  _AuthRouterRefresh(Ref ref) {
+    _subscription = ref.listen<AuthState>(
+      authControllerProvider,
+      (AuthState? previous, AuthState next) {
+        final bool relevantChange = previous == null ||
+            previous.isResolving != next.isResolving ||
+            (previous.user == null) != (next.user == null) ||
+            previous.user?.role != next.user?.role;
+        if (relevantChange) notifyListeners();
+      },
+    );
+  }
+
+  late final ProviderSubscription<AuthState> _subscription;
+
+  @override
+  void dispose() {
+    _subscription.close();
+    super.dispose();
+  }
+}
+
 /// The app router.
+///
+/// A single [GoRouter] instance lives for the app's lifetime — recreating it
+/// resets navigation to `initialLocation`, discarding whatever screen the
+/// user was on. Auth changes reach it through [_AuthRouterRefresh] instead.
 ///
 /// Redirect logic is the single gate between the three role experiences.
 /// A user must never be able to reach another role's subtree, by deep link or
 /// otherwise — see invariant 5 in AGENTS.md.
 final Provider<GoRouter> appRouterProvider = Provider<GoRouter>((Ref ref) {
-  final AuthState auth = ref.watch(authControllerProvider);
+  final _AuthRouterRefresh refresh = _AuthRouterRefresh(ref);
+  ref.onDispose(refresh.dispose);
 
   return GoRouter(
     initialLocation: RoutePaths.splash,
     debugLogDiagnostics: true,
+    refreshListenable: refresh,
     redirect: (BuildContext context, GoRouterState state) {
+      final AuthState auth = ref.read(authControllerProvider);
       final String location = state.matchedLocation;
 
       // Still resolving the session: hold on the splash screen.

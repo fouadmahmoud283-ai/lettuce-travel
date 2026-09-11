@@ -87,6 +87,7 @@ class _IncidentCard extends ConsumerWidget {
                   dense: true,
                 ),
               ],
+            ),
             if (incident.note.isNotEmpty) ...<Widget>[
               const SizedBox(height: AppSpacing.xs),
               Text(incident.note, style: context.text.bodyMedium),
@@ -122,7 +123,6 @@ class _IncidentCard extends ConsumerWidget {
           ],
                   ),
                 ),
-              ),
             ],
           ),
         ),

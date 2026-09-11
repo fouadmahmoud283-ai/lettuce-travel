@@ -22,7 +22,10 @@ class StatTile extends StatelessWidget {
     final ColorScheme scheme = Theme.of(context).colorScheme;
     final Color tint = color ?? scheme.primary;
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.md),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.sm,
+      ),
       decoration: BoxDecoration(
         color: scheme.surface,
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
@@ -49,6 +52,8 @@ class StatTile extends StatelessWidget {
           const SizedBox(height: 2),
           Text(
             label,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: scheme.onSurfaceVariant,
                 ),

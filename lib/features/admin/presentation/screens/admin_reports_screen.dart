@@ -97,7 +97,7 @@ class AdminReportsScreen extends ConsumerWidget {
                   physics: const NeverScrollableScrollPhysics(),
                   mainAxisSpacing: AppSpacing.sm,
                   crossAxisSpacing: AppSpacing.sm,
-                  childAspectRatio: 1.6,
+                  childAspectRatio: 1.3,
                   children: <Widget>[
                     StatTile(
                       value: '${count(AttendanceStatus.droppedOff)}',

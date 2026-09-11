@@ -36,7 +36,7 @@ class _AdminSignInScreenState extends ConsumerState<AdminSignInScreen> {
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(title: Text(context.l10n.adminSignIn)),
         body: SafeArea(
-          child: Padding(
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(AppSpacing.lg),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
