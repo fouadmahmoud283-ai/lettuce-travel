@@ -78,7 +78,7 @@ class _FloatingGlassNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        height: 66,
+        height: 72,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(AppSpacing.radiusLg + 4),
           boxShadow: <BoxShadow>[
@@ -131,7 +131,7 @@ class _NavItem extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[

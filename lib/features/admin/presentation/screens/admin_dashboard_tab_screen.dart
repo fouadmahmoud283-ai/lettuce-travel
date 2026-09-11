@@ -183,7 +183,9 @@ class _BentoTile extends StatelessWidget {
         onTap: onTap,
         child: Ink(
           decoration: BoxDecoration(gradient: gradient),
-          padding: EdgeInsets.all(big || wide ? AppSpacing.md : AppSpacing.sm),
+          padding: big || wide
+              ? const EdgeInsets.all(AppSpacing.md)
+              : const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
           child: wide
               ? Row(
                   children: <Widget>[

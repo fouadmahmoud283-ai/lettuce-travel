@@ -66,7 +66,7 @@ class _OtpVerifyScreenState extends ConsumerState<OtpVerifyScreen> {
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(),
         body: SafeArea(
-          child: Padding(
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(AppSpacing.lg),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -81,11 +81,18 @@ class _OtpVerifyScreenState extends ConsumerState<OtpVerifyScreen> {
                       ?.copyWith(color: context.colors.onSurfaceVariant),
                 ),
                 const SizedBox(height: AppSpacing.xl),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    for (int i = 0; i < _codeLength; i++) _digitBox(i),
-                  ],
+                Directionality(
+                  // Codes are always read and typed left-to-right, even in
+                  // an RTL locale, so this row must not mirror with Arabic
+                  // — otherwise the first digit lands in the rightmost box
+                  // and focus auto-advance walks backwards.
+                  textDirection: TextDirection.ltr,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      for (int i = 0; i < _codeLength; i++) _digitBox(i),
+                    ],
+                  ),
                 ),
                 if (_errorText != null) ...<Widget>[
                   const SizedBox(height: AppSpacing.sm),
