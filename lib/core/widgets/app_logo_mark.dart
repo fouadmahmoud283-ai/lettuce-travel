@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:lettuce_travel/app/theme/app_colors.dart';
 import 'package:lettuce_travel/app/theme/app_spacing.dart';
 
-/// The Lettuce Travel brand mark: a bus glyph on a rounded gradient tile.
+/// The Lettuce Travel brand mark: the company's actual logo
+/// (`assets/images/logo.jpg` — a circular badge, bus + lettuce leaves, with
+/// the wordmark baked into the artwork) on a soft white disc with a drop
+/// shadow for depth.
 ///
 /// Used wherever the product needs to introduce itself — the splash screen,
 /// the sign-in screens — so the app has one consistent visual signature
@@ -22,43 +25,67 @@ class AppLogoMark extends StatelessWidget {
   /// doesn't show the mark at all.
   static const String heroTag = 'appLogoMark';
 
-  /// Overall tile size; the icon scales with it.
+  /// Overall tile size; the artwork scales with it.
   final double size;
 
   /// True when painted on a light/neutral surface (sign-in screens). False
-  /// (default) draws the tile on a plain container tint, for use on top of an
+  /// (default) draws a slightly stronger shadow, for use on top of an
   /// already-colourful surface such as the gradient splash background.
   final bool onLight;
 
   @override
-  Widget build(BuildContext context) {
-    final double radius = size * 0.32;
-    return Container(
-      width: size,
-      height: size,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: <Color>[AppColors.primary, AppColors.primaryDark],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+  Widget build(BuildContext context) => Container(
+        width: size,
+        height: size,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white,
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: AppColors.primaryDark.withValues(alpha: onLight ? 0.22 : 0.4),
+              blurRadius: size * 0.28,
+              offset: Offset(0, size * 0.08),
+            ),
+          ],
         ),
-        borderRadius: BorderRadius.circular(radius),
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            color: AppColors.primaryDark.withValues(alpha: onLight ? 0.28 : 0.4),
-            blurRadius: size * 0.28,
-            offset: Offset(0, size * 0.1),
+        // A hairline padding keeps the artwork's own white margin from
+        // touching the disc's shadowed edge, so the circle crop reads as
+        // deliberate framing rather than a tight crop of the source image.
+        padding: EdgeInsets.all(size * 0.04),
+        child: ClipOval(
+          child: Image.asset(
+            'assets/images/logo.jpg',
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => _FallbackGlyph(size: size),
           ),
-        ],
-      ),
-      child: Icon(
-        Icons.directions_bus_filled_rounded,
-        size: size * 0.54,
-        color: Colors.white,
-      ),
-    );
-  }
+        ),
+      );
+}
+
+/// Drawn only if `assets/images/logo.jpg` is ever missing or fails to
+/// decode — the bus-glyph-on-gradient look this screen used before the real
+/// logo existed.
+class _FallbackGlyph extends StatelessWidget {
+  const _FallbackGlyph({required this.size});
+
+  final double size;
+
+  @override
+  Widget build(BuildContext context) => DecoratedBox(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: <Color>[AppColors.primary, AppColors.primaryDark],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Icon(
+          Icons.directions_bus_filled_rounded,
+          size: size * 0.54,
+          color: Colors.white,
+        ),
+      );
 }
 
 /// The brand mark plus wordmark, stacked, with a gentle entrance animation.

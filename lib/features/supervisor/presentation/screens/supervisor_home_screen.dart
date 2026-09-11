@@ -13,6 +13,7 @@ import 'package:lettuce_travel/core/extensions/context_x.dart';
 import 'package:lettuce_travel/core/extensions/date_x.dart';
 import 'package:lettuce_travel/core/utils/result.dart';
 import 'package:lettuce_travel/core/widgets/async_value_view.dart';
+import 'package:lettuce_travel/core/widgets/gradient_hero_header.dart';
 import 'package:lettuce_travel/core/widgets/status_chip.dart';
 import 'package:lettuce_travel/features/schools/domain/entities/bus_route.dart';
 import 'package:lettuce_travel/features/supervisor/presentation/controllers/supervisor_home_controller.dart';
@@ -30,10 +31,10 @@ class SupervisorHomeScreen extends ConsumerWidget {
     final AsyncValue<BusRoute?> routeAsync = ref.watch(supervisorRouteProvider);
     final AsyncValue<List<Trip>> tripsAsync = ref.watch(supervisorTodayTripsProvider);
 
+    // No settings action, no native AppBar: the hero header below carries the
+    // title (matching the admin dashboard and parent home pattern), and the
+    // supervisor shell's second tab is the profile/settings screen.
     return Scaffold(
-      // No settings action here: the supervisor shell's second tab is the
-      // profile/settings screen, so this AppBar stays focused on the trips.
-      appBar: AppBar(title: Text(context.l10n.myTrips)),
       body: SafeArea(
         child: AsyncValueView<BusRoute?>(
           value: routeAsync,
@@ -51,8 +52,13 @@ class SupervisorHomeScreen extends ConsumerWidget {
                   AppSpacing.navBarClearance,
                 ),
                 children: <Widget>[
-                  Text(context.l10n.today, style: context.text.titleMedium),
-                  const SizedBox(height: AppSpacing.sm),
+                  GradientHeroHeader(
+                    title: context.l10n.myTrips,
+                    subtitle: context.l10n.today,
+                    trailingIcon: Icons.directions_bus_filled_rounded,
+                    backgroundImage: 'assets/images/supervisor_hero.jpg',
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
                   _TripCard(
                     route: route,
                     type: TripType.morningPickup,
