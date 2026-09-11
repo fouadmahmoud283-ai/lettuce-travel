@@ -24,6 +24,7 @@ class AdminSchoolsScreen extends ConsumerWidget {
       body: SafeArea(
         child: AsyncValueView<List<School>>(
           value: schools,
+          skeletonKind: SkeletonKind.list,
           data: (List<School> items) => items.isEmpty
               ? AppEmptyView(message: context.l10n.noData, icon: Icons.school_outlined)
               : ListView.builder(

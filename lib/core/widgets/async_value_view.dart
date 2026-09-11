@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:lettuce_travel/app/theme/app_spacing.dart';
 import 'package:lettuce_travel/core/extensions/context_x.dart';
+import 'package:lettuce_travel/core/widgets/shimmer_skeleton.dart';
 
 /// Renders an [AsyncValue] with the app's standard loading and error states,
 /// so screens never hand-roll an `isLoading` boolean (AGENTS.md section 6).
@@ -13,6 +14,7 @@ class AsyncValueView<T> extends StatelessWidget {
     this.onRetry,
     this.loading,
     this.errorMessage,
+    this.skeletonKind,
     super.key,
   });
 
@@ -22,18 +24,31 @@ class AsyncValueView<T> extends StatelessWidget {
   final WidgetBuilder? loading;
   final String Function(Object error)? errorMessage;
 
+  /// Opt-in shimmer skeleton for screens whose loading state is actually
+  /// visible for a moment (a list or a hero card) rather than instant —
+  /// leave null for the plain spinner, which is fine for quick taps.
+  final SkeletonKind? skeletonKind;
+
   @override
   Widget build(BuildContext context) => value.when(
         data: data,
-        loading: () =>
-            loading?.call(context) ??
-            const Center(child: CircularProgressIndicator()),
+        loading: () => loading?.call(context) ?? _defaultLoading(),
         error: (Object error, StackTrace stackTrace) => AppErrorView(
           message: errorMessage?.call(error) ?? context.l10n.somethingWrong,
           onRetry: onRetry,
         ),
       );
+
+  Widget _defaultLoading() => switch (skeletonKind) {
+        null => const Center(child: CircularProgressIndicator()),
+        SkeletonKind.list => const ShimmerListSkeleton(),
+        SkeletonKind.card => const ShimmerCardSkeleton(),
+      };
 }
+
+/// Which shimmer shape [AsyncValueView] should show while loading, when
+/// [AsyncValueView.skeletonKind] is set.
+enum SkeletonKind { list, card }
 
 /// Full-bleed error state with an optional retry action.
 class AppErrorView extends StatelessWidget {

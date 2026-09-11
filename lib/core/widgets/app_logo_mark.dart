@@ -15,6 +15,13 @@ class AppLogoMark extends StatelessWidget {
     super.key,
   });
 
+  /// Shared [Hero] tag for screens that want the logo to travel smoothly
+  /// between them on push/pop (the phone, OTP and admin sign-in screens) —
+  /// deliberately not used on the splash screen, which only ever *redirects*
+  /// away (no Hero transition happens on a redirect) into a screen that
+  /// doesn't show the mark at all.
+  static const String heroTag = 'appLogoMark';
+
   /// Overall tile size; the icon scales with it.
   final double size;
 

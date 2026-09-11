@@ -51,7 +51,12 @@ class _AdminSignInScreenState extends ConsumerState<AdminSignInScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     const SizedBox(height: AppSpacing.lg),
-                    const Center(child: AppLogoMark(size: 64, onLight: true)),
+                    const Center(
+                      child: Hero(
+                        tag: AppLogoMark.heroTag,
+                        child: AppLogoMark(size: 64, onLight: true),
+                      ),
+                    ),
                     const SizedBox(height: AppSpacing.xl),
                     TextField(
                       controller: _emailController,

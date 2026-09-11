@@ -80,7 +80,12 @@ class _OtpVerifyScreenState extends ConsumerState<OtpVerifyScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-                    const Center(child: AppLogoMark(size: 64, onLight: true)),
+                    const Center(
+                      child: Hero(
+                        tag: AppLogoMark.heroTag,
+                        child: AppLogoMark(size: 64, onLight: true),
+                      ),
+                    ),
                     const SizedBox(height: AppSpacing.lg),
                     Text(context.l10n.verificationCode, style: context.text.headlineSmall),
                     const SizedBox(height: AppSpacing.xs),

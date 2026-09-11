@@ -61,6 +61,7 @@ dependencies:
   flutter_animate: ^4.5.2        # declarative entrance/transition animations
   fl_chart: ^0.70.2              # charts for admin reports
   flutter_staggered_grid_view: ^0.7.0   # bento-style dashboard layouts
+  animations: ^3.0.0             # official flutter.dev package: OpenContainer morph transitions
   # phosphor_flutter was tried and removed: PhosphorIconData extends IconData,
   # which this Flutter SDK's Dart version rejects now that IconData is a
   # final class. Confirmed 2.1.0 is still the latest release (2+ years old,

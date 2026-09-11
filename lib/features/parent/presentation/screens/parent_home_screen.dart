@@ -1,8 +1,7 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
-import 'package:lettuce_travel/app/router/route_paths.dart';
 import 'package:lettuce_travel/app/theme/app_spacing.dart';
 import 'package:lettuce_travel/core/extensions/context_x.dart';
 import 'package:lettuce_travel/core/widgets/async_value_view.dart';
@@ -12,6 +11,7 @@ import 'package:lettuce_travel/core/widgets/status_chip.dart';
 import 'package:lettuce_travel/features/attendance/domain/entities/attendance_status.dart';
 import 'package:lettuce_travel/features/attendance/presentation/widgets/attendance_status_x.dart';
 import 'package:lettuce_travel/features/parent/presentation/controllers/parent_children_controller.dart';
+import 'package:lettuce_travel/features/parent/presentation/screens/parent_child_screen.dart';
 
 /// Parent landing screen: one card per child, showing today at a glance.
 class ParentHomeScreen extends ConsumerWidget {
@@ -28,21 +28,25 @@ class ParentHomeScreen extends ConsumerWidget {
       body: SafeArea(
         child: AsyncValueView<List<ParentChildSummary>>(
           value: children,
+          skeletonKind: SkeletonKind.list,
           data: (List<ParentChildSummary> summaries) => summaries.isEmpty
               ? AppEmptyView(message: context.l10n.noData, icon: Icons.family_restroom_rounded)
-              : ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(
-                    AppSpacing.md,
-                    AppSpacing.md,
-                    AppSpacing.md,
-                    AppSpacing.navBarClearance,
+              : RefreshIndicator(
+                  onRefresh: () => ref.refresh(parentChildrenProvider.future),
+                  child: ListView.separated(
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.md,
+                      AppSpacing.md,
+                      AppSpacing.md,
+                      AppSpacing.navBarClearance,
+                    ),
+                    itemCount: summaries.length + 1,
+                    separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.md),
+                    itemBuilder: (BuildContext context, int index) {
+                      if (index == 0) return _OverviewHeader(summaries: summaries);
+                      return _ChildCard(summary: summaries[index - 1]);
+                    },
                   ),
-                  itemCount: summaries.length + 1,
-                  separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.md),
-                  itemBuilder: (BuildContext context, int index) {
-                    if (index == 0) return _OverviewHeader(summaries: summaries);
-                    return _ChildCard(summary: summaries[index - 1]);
-                  },
                 ),
         ),
       ),
@@ -80,6 +84,7 @@ class _OverviewHeader extends StatelessWidget {
       title: context.l10n.today,
       subtitle: context.l10n.myChildren,
       trailingIcon: Icons.wb_sunny_rounded,
+      backgroundImage: 'assets/images/bus_hero.jpg',
       metrics: <HeroMetric>[
         HeroMetric(
           value: '$waiting',
@@ -109,17 +114,25 @@ class _ChildCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AttendanceStatus status = summary.todayRecord?.status ?? AttendanceStatus.pending;
-    return Material(
-      color: context.colors.surface,
-      elevation: 1,
-      shadowColor: context.colors.shadow.withValues(alpha: 0.14),
-      clipBehavior: Clip.antiAlias,
-      borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-      child: InkWell(
+
+    // OpenContainer (package:animations, official flutter.dev) morphs this
+    // card directly into the full child screen rather than cutting to it —
+    // the signature "premium app" transition. It manages its own overlay
+    // route, so this bypasses go_router for just this one hop; the child
+    // screen itself, and everything it pushes, is unaffected.
+    return OpenContainer(
+      transitionType: ContainerTransitionType.fadeThrough,
+      transitionDuration: const Duration(milliseconds: 420),
+      openColor: context.theme.scaffoldBackgroundColor,
+      closedColor: context.colors.surface,
+      closedElevation: 1,
+      closedShape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-        onTap: () => context.push(
-          RoutePaths.of(RoutePaths.parentChild, <String, String>{'studentId': summary.student.id}),
-        ),
+      ),
+      openBuilder: (BuildContext context, VoidCallback _) =>
+          ParentChildScreen(studentId: summary.student.id),
+      closedBuilder: (BuildContext context, VoidCallback openContainer) => InkWell(
+        onTap: openContainer,
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.md),
           child: Row(

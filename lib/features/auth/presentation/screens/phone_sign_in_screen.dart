@@ -63,7 +63,12 @@ class _PhoneSignInScreenState extends ConsumerState<PhoneSignInScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
-                        const Center(child: AppLogoMark(size: 76, onLight: true)),
+                        const Center(
+                          child: Hero(
+                            tag: AppLogoMark.heroTag,
+                            child: AppLogoMark(size: 76, onLight: true),
+                          ),
+                        ),
                         const SizedBox(height: AppSpacing.lg),
                         Text(
                           context.l10n.welcomeTitle,
