@@ -70,6 +70,13 @@ class AppL10nAr extends AppL10n {
   String get welcomeSubtitle => 'سجّل الدخول للمتابعة';
 
   @override
+  String get welcomeTagline =>
+      'تتبع مباشر للحافلة، وإشعارات فورية عند الصعود والنزول، كل ذلك في مكان واحد.';
+
+  @override
+  String get getStarted => 'ابدأ الآن';
+
+  @override
   String get demoPhoneHint =>
       'للتجربة: أضف 999 داخل الرقم لحساب مشرف، وأي رقم آخر يسجل الدخول كولي أمر.';
 

@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:lettuce_travel/app/theme/app_colors.dart';
 import 'package:lettuce_travel/app/theme/app_spacing.dart';
 import 'package:lettuce_travel/core/errors/failure_x.dart';
 import 'package:lettuce_travel/core/extensions/context_x.dart';
 import 'package:lettuce_travel/core/widgets/app_logo_mark.dart';
+import 'package:lettuce_travel/core/widgets/bus_illustration.dart';
 import 'package:lettuce_travel/features/auth/presentation/controllers/auth_controller.dart';
 
 /// SMS code entry: six digit boxes with auto-advance, and a 60-second resend
@@ -65,64 +67,73 @@ class _OtpVerifyScreenState extends ConsumerState<OtpVerifyScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                const Center(child: AppLogoMark(size: 64, onLight: true)),
-                const SizedBox(height: AppSpacing.lg),
-                Text(context.l10n.verificationCode, style: context.text.headlineSmall),
-                const SizedBox(height: AppSpacing.xs),
-                Text(
-                  context.l10n.otpSentTo(widget.phoneNumber),
-                  style: context.text.bodyMedium
-                      ?.copyWith(color: context.colors.onSurfaceVariant),
-                ),
-                const SizedBox(height: AppSpacing.xl),
-                Directionality(
-                  // Codes are always read and typed left-to-right, even in
-                  // an RTL locale, so this row must not mirror with Arabic
-                  // — otherwise the first digit lands in the rightmost box
-                  // and focus auto-advance walks backwards.
-                  textDirection: TextDirection.ltr,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      for (int i = 0; i < _codeLength; i++) _digitBox(i),
-                    ],
-                  ),
-                ),
-                if (_errorText != null) ...<Widget>[
-                  const SizedBox(height: AppSpacing.sm),
-                  Text(_errorText!, style: TextStyle(color: context.colors.error)),
-                ],
-                const SizedBox(height: AppSpacing.lg),
-                FilledButton(
-                  onPressed: _submitting ? null : _verify,
-                  child: _submitting
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : Text(context.l10n.verify),
-                ),
-                const SizedBox(height: AppSpacing.md),
-                Center(
-                  child: TextButton(
-                    onPressed: _resendSeconds > 0 ? null : _resend,
-                    child: Text(
-                      _resendSeconds > 0
-                          ? context.l10n.resendCodeIn(_resendSeconds)
-                          : context.l10n.resendCode,
-                    ),
-                  ),
-                ),
-              ],
+        body: Stack(
+          children: <Widget>[
+            Positioned.fill(
+              child: DecorativeBlobs(
+                colors: <Color>[AppColors.secondary, AppColors.primary],
+              ),
             ),
-          ),
+            SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    const Center(child: AppLogoMark(size: 64, onLight: true)),
+                    const SizedBox(height: AppSpacing.lg),
+                    Text(context.l10n.verificationCode, style: context.text.headlineSmall),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      context.l10n.otpSentTo(widget.phoneNumber),
+                      style: context.text.bodyMedium
+                          ?.copyWith(color: context.colors.onSurfaceVariant),
+                    ),
+                    const SizedBox(height: AppSpacing.xl),
+                    Directionality(
+                      // Codes are always read and typed left-to-right, even in
+                      // an RTL locale, so this row must not mirror with Arabic
+                      // — otherwise the first digit lands in the rightmost box
+                      // and focus auto-advance walks backwards.
+                      textDirection: TextDirection.ltr,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          for (int i = 0; i < _codeLength; i++) _digitBox(i),
+                        ],
+                      ),
+                    ),
+                    if (_errorText != null) ...<Widget>[
+                      const SizedBox(height: AppSpacing.sm),
+                      Text(_errorText!, style: TextStyle(color: context.colors.error)),
+                    ],
+                    const SizedBox(height: AppSpacing.lg),
+                    FilledButton(
+                      onPressed: _submitting ? null : _verify,
+                      child: _submitting
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : Text(context.l10n.verify),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    Center(
+                      child: TextButton(
+                        onPressed: _resendSeconds > 0 ? null : _resend,
+                        child: Text(
+                          _resendSeconds > 0
+                              ? context.l10n.resendCodeIn(_resendSeconds)
+                              : context.l10n.resendCode,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       );
 

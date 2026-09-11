@@ -33,6 +33,8 @@
   "backToPhoneSignIn": "Sign in with phone instead",
   "welcomeTitle": "Welcome",
   "welcomeSubtitle": "Sign in to continue",
+  "welcomeTagline": "Live bus tracking, instant pickup and drop-off alerts, all in one place.",
+  "getStarted": "Get started",
   "demoPhoneHint": "Demo: include 999 in the number for a supervisor account. Any other number signs in as a parent.",
   "demoAdminHint": "Demo password: admin123",
   "signOut": "Sign out",

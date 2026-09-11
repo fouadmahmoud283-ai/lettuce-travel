@@ -70,6 +70,13 @@ class AppL10nEn extends AppL10n {
   String get welcomeSubtitle => 'Sign in to continue';
 
   @override
+  String get welcomeTagline =>
+      'Live bus tracking, instant pickup and drop-off alerts, all in one place.';
+
+  @override
+  String get getStarted => 'Get started';
+
+  @override
   String get demoPhoneHint =>
       'Demo: include 999 in the number for a supervisor account. Any other number signs in as a parent.';
 

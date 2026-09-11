@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:lettuce_travel/app/theme/app_colors.dart';
 import 'package:lettuce_travel/app/theme/app_spacing.dart';
 import 'package:lettuce_travel/core/errors/failure_x.dart';
 import 'package:lettuce_travel/core/extensions/context_x.dart';
 import 'package:lettuce_travel/core/widgets/app_logo_mark.dart';
+import 'package:lettuce_travel/core/widgets/bus_illustration.dart';
 import 'package:lettuce_travel/core/widgets/demo_hint_banner.dart';
 import 'package:lettuce_travel/features/auth/presentation/controllers/auth_controller.dart';
 
@@ -35,65 +37,76 @@ class _AdminSignInScreenState extends ConsumerState<AdminSignInScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(title: Text(context.l10n.adminSignIn)),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                const SizedBox(height: AppSpacing.lg),
-                const Center(child: AppLogoMark(size: 64, onLight: true)),
-                const SizedBox(height: AppSpacing.xl),
-                TextField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  textCapitalization: TextCapitalization.none,
-                  autocorrect: false,
-                  enableSuggestions: false,
-                  decoration: InputDecoration(
-                    labelText: context.l10n.adminEmailLabel,
-                    prefixIcon: const Icon(Icons.email_outlined),
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.md),
-                TextField(
-                  controller: _passwordController,
-                  obscureText: _obscure,
-                  textCapitalization: TextCapitalization.none,
-                  autocorrect: false,
-                  enableSuggestions: false,
-                  decoration: InputDecoration(
-                    labelText: context.l10n.adminPasswordLabel,
-                    prefixIcon: const Icon(Icons.lock_outline),
-                    errorText: _errorText,
-                    suffixIcon: IconButton(
-                      icon: Icon(_obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined),
-                      onPressed: () => setState(() => _obscure = !_obscure),
-                    ),
-                  ),
-                  onSubmitted: (_) => _submit(),
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                DemoHintBanner(text: context.l10n.demoAdminHint),
-                const SizedBox(height: AppSpacing.lg),
-                FilledButton(
-                  onPressed: _submitting ? null : _submit,
-                  child: _submitting
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : Text(context.l10n.signIn),
-                ),
-                const SizedBox(height: AppSpacing.md),
-                TextButton(
-                  onPressed: () => context.pop(),
-                  child: Text(context.l10n.backToPhoneSignIn),
-                ),
-              ],
+        body: Stack(
+          children: <Widget>[
+            Positioned.fill(
+              child: DecorativeBlobs(
+                colors: <Color>[AppColors.meshViolet, AppColors.primary],
+              ),
             ),
-          ),
+            SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    const SizedBox(height: AppSpacing.lg),
+                    const Center(child: AppLogoMark(size: 64, onLight: true)),
+                    const SizedBox(height: AppSpacing.xl),
+                    TextField(
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      textCapitalization: TextCapitalization.none,
+                      autocorrect: false,
+                      enableSuggestions: false,
+                      decoration: InputDecoration(
+                        labelText: context.l10n.adminEmailLabel,
+                        prefixIcon: const Icon(Icons.email_outlined),
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    TextField(
+                      controller: _passwordController,
+                      obscureText: _obscure,
+                      textCapitalization: TextCapitalization.none,
+                      autocorrect: false,
+                      enableSuggestions: false,
+                      decoration: InputDecoration(
+                        labelText: context.l10n.adminPasswordLabel,
+                        prefixIcon: const Icon(Icons.lock_outline),
+                        errorText: _errorText,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                          ),
+                          onPressed: () => setState(() => _obscure = !_obscure),
+                        ),
+                      ),
+                      onSubmitted: (_) => _submit(),
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    DemoHintBanner(text: context.l10n.demoAdminHint),
+                    const SizedBox(height: AppSpacing.lg),
+                    FilledButton(
+                      onPressed: _submitting ? null : _submit,
+                      child: _submitting
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : Text(context.l10n.signIn),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    TextButton(
+                      onPressed: () => context.pop(),
+                      child: Text(context.l10n.backToPhoneSignIn),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       );
 

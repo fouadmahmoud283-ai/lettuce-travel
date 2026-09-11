@@ -24,6 +24,7 @@ import 'package:lettuce_travel/features/auth/presentation/screens/otp_verify_scr
 import 'package:lettuce_travel/features/auth/presentation/screens/phone_sign_in_screen.dart';
 import 'package:lettuce_travel/features/auth/presentation/screens/settings_screen.dart';
 import 'package:lettuce_travel/features/auth/presentation/screens/splash_screen.dart';
+import 'package:lettuce_travel/features/auth/presentation/screens/welcome_screen.dart';
 import 'package:lettuce_travel/features/parent/presentation/screens/parent_absence_screen.dart';
 import 'package:lettuce_travel/features/parent/presentation/screens/parent_child_screen.dart';
 import 'package:lettuce_travel/features/parent/presentation/screens/parent_history_screen.dart';
@@ -103,13 +104,14 @@ final Provider<GoRouter> appRouterProvider = Provider<GoRouter>((Ref ref) {
       }
 
       final AppUser? user = auth.user;
-      final bool onAuthRoute = location.startsWith('/sign-in') ||
+      final bool onAuthRoute = location == RoutePaths.welcome ||
+          location.startsWith('/sign-in') ||
           location == RoutePaths.splash;
 
       if (user == null) {
         return onAuthRoute && location != RoutePaths.splash
             ? null
-            : RoutePaths.phoneSignIn;
+            : RoutePaths.welcome;
       }
 
       final String home = _homeFor(user.role);
@@ -129,6 +131,10 @@ final Provider<GoRouter> appRouterProvider = Provider<GoRouter>((Ref ref) {
       GoRoute(
         path: RoutePaths.splash,
         builder: (_, __) => const SplashScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.welcome,
+        builder: (_, __) => const WelcomeScreen(),
       ),
       GoRoute(
         path: RoutePaths.phoneSignIn,

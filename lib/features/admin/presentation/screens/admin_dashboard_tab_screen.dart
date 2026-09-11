@@ -41,6 +41,7 @@ class AdminDashboardTabScreen extends ConsumerWidget {
               title: context.l10n.administration,
               subtitle: context.l10n.adminHeroSubtitle,
               trailingIcon: Icons.insights_rounded,
+              backgroundImage: 'assets/images/school_building.jpg',
             ).animate().fadeIn(duration: 420.ms).slideY(begin: 0.08, end: 0),
             const SizedBox(height: AppSpacing.lg),
             AsyncValueView<AdminDashboardStats>(

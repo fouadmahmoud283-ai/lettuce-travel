@@ -211,6 +211,18 @@ abstract class AppL10n {
   /// **'Sign in to continue'**
   String get welcomeSubtitle;
 
+  /// No description provided for @welcomeTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Live bus tracking, instant pickup and drop-off alerts, all in one place.'**
+  String get welcomeTagline;
+
+  /// No description provided for @getStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Get started'**
+  String get getStarted;
+
   /// No description provided for @demoPhoneHint.
   ///
   /// In en, this message translates to:

@@ -2,6 +2,7 @@
 abstract final class RoutePaths {
   // --- Shared ---
   static const String splash = '/';
+  static const String welcome = '/welcome';
   static const String phoneSignIn = '/sign-in';
   static const String otpVerify = '/sign-in/otp';
   static const String adminSignIn = '/sign-in/admin';

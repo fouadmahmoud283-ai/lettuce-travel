@@ -17,6 +17,7 @@ class GradientHeroHeader extends StatelessWidget {
     this.subtitle,
     this.trailingIcon,
     this.metrics,
+    this.backgroundImage,
     super.key,
   });
 
@@ -27,6 +28,11 @@ class GradientHeroHeader extends StatelessWidget {
   /// An optional row of [HeroMetric]s shown under the title, each rendered as
   /// a frosted-glass tile floating over the gradient.
   final List<HeroMetric>? metrics;
+
+  /// An optional asset path (e.g. `'assets/images/school_building.jpg'`)
+  /// blended faintly under the mesh gradient — a touch of real photography
+  /// without ever competing with the white text on top of it.
+  final String? backgroundImage;
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +46,28 @@ class GradientHeroHeader extends StatelessWidget {
           // Stack has only Positioned children (the glow circles), so with no
           // non-positioned child of its own it would otherwise collapse to
           // zero size instead of filling behind the content below.
+          if (backgroundImage != null)
+            Positioned.fill(
+              child: Opacity(
+                opacity: 0.35,
+                child: Image.asset(
+                  backgroundImage!,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                ),
+              ),
+            ),
           Positioned.fill(
             child: MeshGradientBackground(
-              colors: AppColors.heroMeshGradient,
+              // A touch more opaque when sitting over a photo, so the mesh
+              // still reads as the dominant layer and the text stays legible.
+              colors: backgroundImage == null
+                  ? AppColors.heroMeshGradient
+                  : <Color>[
+                      AppColors.meshTeal.withValues(alpha: 0.92),
+                      AppColors.meshViolet.withValues(alpha: 0.92),
+                      AppColors.meshCoral.withValues(alpha: 0.92),
+                    ],
               borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
             ),
           ),
