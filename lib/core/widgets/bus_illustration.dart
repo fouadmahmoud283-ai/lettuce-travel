@@ -134,11 +134,11 @@ class _BusScenePainter extends CustomPainter {
 
     // Body: a subtle vertical gradient reads as painted metal rather than flat.
     final Paint bodyPaint = Paint()
-      ..shader = LinearGradient(
+      ..shader = const LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         colors: <Color>[_busRoof, _busBody, _busBodyDark],
-        stops: const <double>[0, 0.55, 1],
+        stops: <double>[0, 0.55, 1],
       ).createShader(body);
     canvas.drawRRect(busRRect, bodyPaint);
 

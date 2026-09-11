@@ -20,8 +20,6 @@ class WelcomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final Locale locale = ref.watch(localeControllerProvider);
-
     return Scaffold(
       body: Stack(
         children: <Widget>[

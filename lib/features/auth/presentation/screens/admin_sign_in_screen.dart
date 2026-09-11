@@ -40,7 +40,7 @@ class _AdminSignInScreenState extends ConsumerState<AdminSignInScreen> {
         body: Stack(
           children: <Widget>[
             Positioned.fill(
-              child: DecorativeBlobs(
+              child: const DecorativeBlobs(
                 colors: <Color>[AppColors.meshViolet, AppColors.primary],
               ),
             ),
