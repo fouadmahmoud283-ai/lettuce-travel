@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import 'package:lettuce_travel/app/router/route_paths.dart';
 import 'package:lettuce_travel/app/shell/role_shell_scaffold.dart';
@@ -120,23 +119,23 @@ final Provider<GoRouter> appRouterProvider = Provider<GoRouter>((Ref ref) {
           navigationShell: shell,
           destinations: <ShellDestination>[
             ShellDestination(
-              icon: PhosphorIconsRegular.squaresFour,
-              selectedIcon: PhosphorIconsFill.squaresFour,
+              icon: Icons.dashboard_outlined,
+              selectedIcon: Icons.dashboard,
               label: context.l10n.navDashboard,
             ),
             ShellDestination(
-              icon: PhosphorIconsRegular.mapTrifold,
-              selectedIcon: PhosphorIconsFill.mapTrifold,
+              icon: Icons.map_outlined,
+              selectedIcon: Icons.map,
               label: context.l10n.navLive,
             ),
             ShellDestination(
-              icon: PhosphorIconsRegular.chartBar,
-              selectedIcon: PhosphorIconsFill.chartBar,
+              icon: Icons.bar_chart_outlined,
+              selectedIcon: Icons.bar_chart_rounded,
               label: context.l10n.reports,
             ),
             ShellDestination(
-              icon: PhosphorIconsRegular.dotsThreeCircle,
-              selectedIcon: PhosphorIconsFill.dotsThreeCircle,
+              icon: Icons.apps_outlined,
+              selectedIcon: Icons.apps,
               label: context.l10n.moreTabLabel,
             ),
           ],
@@ -203,13 +202,13 @@ final Provider<GoRouter> appRouterProvider = Provider<GoRouter>((Ref ref) {
           navigationShell: shell,
           destinations: <ShellDestination>[
             ShellDestination(
-              icon: PhosphorIconsRegular.bus,
-              selectedIcon: PhosphorIconsFill.bus,
+              icon: Icons.directions_bus_outlined,
+              selectedIcon: Icons.directions_bus_filled_rounded,
               label: context.l10n.navTrips,
             ),
             ShellDestination(
-              icon: PhosphorIconsRegular.userCircle,
-              selectedIcon: PhosphorIconsFill.userCircle,
+              icon: Icons.account_circle_outlined,
+              selectedIcon: Icons.account_circle,
               label: context.l10n.settings,
             ),
           ],
@@ -244,18 +243,18 @@ final Provider<GoRouter> appRouterProvider = Provider<GoRouter>((Ref ref) {
           navigationShell: shell,
           destinations: <ShellDestination>[
             ShellDestination(
-              icon: PhosphorIconsRegular.house,
-              selectedIcon: PhosphorIconsFill.house,
+              icon: Icons.home_outlined,
+              selectedIcon: Icons.home,
               label: context.l10n.myChildren,
             ),
             ShellDestination(
-              icon: PhosphorIconsRegular.chatCircleDots,
-              selectedIcon: PhosphorIconsFill.chatCircleDots,
+              icon: Icons.chat_bubble_outline_rounded,
+              selectedIcon: Icons.chat_bubble,
               label: context.l10n.messagesTitle,
             ),
             ShellDestination(
-              icon: PhosphorIconsRegular.userCircle,
-              selectedIcon: PhosphorIconsFill.userCircle,
+              icon: Icons.account_circle_outlined,
+              selectedIcon: Icons.account_circle,
               label: context.l10n.settings,
             ),
           ],

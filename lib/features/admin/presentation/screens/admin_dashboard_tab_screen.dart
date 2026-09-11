@@ -3,7 +3,6 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import 'package:lettuce_travel/app/router/route_paths.dart';
 import 'package:lettuce_travel/app/theme/app_colors.dart';
@@ -41,7 +40,7 @@ class AdminDashboardTabScreen extends ConsumerWidget {
             GradientHeroHeader(
               title: context.l10n.administration,
               subtitle: context.l10n.adminHeroSubtitle,
-              trailingIcon: PhosphorIconsFill.gauge,
+              trailingIcon: Icons.insights_rounded,
             ).animate().fadeIn(duration: 420.ms).slideY(begin: 0.08, end: 0),
             const SizedBox(height: AppSpacing.lg),
             AsyncValueView<AdminDashboardStats>(
@@ -57,7 +56,7 @@ class AdminDashboardTabScreen extends ConsumerWidget {
                     child: _BentoTile(
                       value: '${s.busesOnRoad}',
                       label: context.l10n.dashboardBusesOnRoad,
-                      icon: PhosphorIconsFill.bus,
+                      icon: Icons.directions_bus_filled_rounded,
                       gradient: const LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -73,7 +72,7 @@ class AdminDashboardTabScreen extends ConsumerWidget {
                     child: _BentoTile(
                       value: '${s.childrenOnBoard}',
                       label: context.l10n.dashboardChildrenOnBoard,
-                      icon: PhosphorIconsFill.usersThree,
+                      icon: Icons.groups_rounded,
                     ),
                   ),
                   StaggeredGridTile.count(
@@ -82,7 +81,7 @@ class AdminDashboardTabScreen extends ConsumerWidget {
                     child: _BentoTile(
                       value: '${s.openIncidents}',
                       label: context.l10n.dashboardOpenIncidents,
-                      icon: PhosphorIconsFill.warning,
+                      icon: Icons.warning_amber_rounded,
                       accent: s.openIncidents > 0 ? context.colors.error : null,
                       onTap: () => context.push(RoutePaths.adminIncidents),
                     ),
@@ -93,7 +92,7 @@ class AdminDashboardTabScreen extends ConsumerWidget {
                     child: _BentoTile(
                       value: '${s.schoolsCount}',
                       label: context.l10n.dashboardSchools,
-                      icon: PhosphorIconsFill.buildings,
+                      icon: Icons.school_rounded,
                       wide: true,
                       onTap: () => context.push(RoutePaths.adminSchools),
                     ),
