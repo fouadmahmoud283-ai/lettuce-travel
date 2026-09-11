@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:lettuce_travel/app/theme/app_spacing.dart';
@@ -32,6 +33,9 @@ class ParentHistoryScreen extends ConsumerWidget {
                   separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.sm),
                   itemBuilder: (BuildContext context, int index) {
                     final AttendanceRecord record = records[index];
+                    // Cap the stagger so a long history list doesn't leave the
+                    // last rows waiting seconds to fade in.
+                    final int staggerMs = (index * 40).clamp(0, 400);
                     return Material(
                       color: context.colors.surface,
                       elevation: 1,
@@ -78,7 +82,10 @@ class ParentHistoryScreen extends ConsumerWidget {
                           ],
                         ),
                       ),
-                    );
+                    ).animate().fadeIn(
+                          delay: Duration(milliseconds: staggerMs),
+                          duration: 260.ms,
+                        ).slideX(begin: 0.03, end: 0);
                   },
                 ),
         ),

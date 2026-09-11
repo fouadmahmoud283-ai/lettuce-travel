@@ -45,17 +45,10 @@ abstract final class AppTheme {
       scaffoldBackgroundColor: surfaceBg,
       splashFactory: InkSparkle.splashFactory,
       visualDensity: VisualDensity.standard,
-
-      // A consistent, platform-neutral push transition everywhere go_router
-      // pushes a route, so Android and iOS feel like the same product.
-      pageTransitionsTheme: const PageTransitionsTheme(
-        builders: <TargetPlatform, PageTransitionsBuilder>{
-          TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-          TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-          TargetPlatform.windows: CupertinoPageTransitionsBuilder(),
-          TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
-        },
-      ),
+      // Deliberately no custom pageTransitionsTheme: Flutter's Material 3
+      // default (Zoom on Android, Cupertino-style on iOS) already gives each
+      // platform its native feel, and it's one less API surface to get wrong
+      // across Flutter versions this project hasn't pinned yet.
 
       appBarTheme: AppBarTheme(
         backgroundColor: surfaceBg,

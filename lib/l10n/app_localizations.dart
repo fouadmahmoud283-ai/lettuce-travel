@@ -787,6 +787,48 @@ abstract class AppL10n {
   /// **'Schools, buses, routes and everyone who keeps them running'**
   String get adminHeroSubtitle;
 
+  /// No description provided for @quickActions.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick actions'**
+  String get quickActions;
+
+  /// No description provided for @navDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Dashboard'**
+  String get navDashboard;
+
+  /// No description provided for @moreTabLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get moreTabLabel;
+
+  /// No description provided for @moreSectionOperations.
+  ///
+  /// In en, this message translates to:
+  /// **'Operations'**
+  String get moreSectionOperations;
+
+  /// No description provided for @moreSectionSetup.
+  ///
+  /// In en, this message translates to:
+  /// **'Setup'**
+  String get moreSectionSetup;
+
+  /// No description provided for @navLive.
+  ///
+  /// In en, this message translates to:
+  /// **'Live'**
+  String get navLive;
+
+  /// No description provided for @navTrips.
+  ///
+  /// In en, this message translates to:
+  /// **'Trips'**
+  String get navTrips;
+
   /// No description provided for @dashboardBusesOnRoad.
   ///
   /// In en, this message translates to:
@@ -1038,6 +1080,24 @@ abstract class AppL10n {
   /// In en, this message translates to:
   /// **'No attendance in this range'**
   String get reportsNoData;
+
+  /// No description provided for @reportsBreakdownTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Status breakdown'**
+  String get reportsBreakdownTitle;
+
+  /// No description provided for @reportsTotalRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'total records'**
+  String get reportsTotalRecords;
+
+  /// No description provided for @reportsTrendTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily trend'**
+  String get reportsTrendTitle;
 
   /// No description provided for @reportsExport.
   ///

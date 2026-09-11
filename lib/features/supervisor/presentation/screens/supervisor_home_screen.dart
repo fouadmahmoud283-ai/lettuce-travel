@@ -31,16 +31,9 @@ class SupervisorHomeScreen extends ConsumerWidget {
     final AsyncValue<List<Trip>> tripsAsync = ref.watch(supervisorTodayTripsProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(context.l10n.myTrips),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.settings_outlined),
-            tooltip: context.l10n.settings,
-            onPressed: () => context.push(RoutePaths.settings),
-          ),
-        ],
-      ),
+      // No settings action here: the supervisor shell's second tab is the
+      // profile/settings screen, so this AppBar stays focused on the trips.
+      appBar: AppBar(title: Text(context.l10n.myTrips)),
       body: SafeArea(
         child: AsyncValueView<BusRoute?>(
           value: routeAsync,
@@ -51,7 +44,12 @@ class SupervisorHomeScreen extends ConsumerWidget {
             return AsyncValueView<List<Trip>>(
               value: tripsAsync,
               data: (List<Trip> trips) => ListView(
-                padding: const EdgeInsets.all(AppSpacing.md),
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.md,
+                  AppSpacing.md,
+                  AppSpacing.md,
+                  AppSpacing.navBarClearance,
+                ),
                 children: <Widget>[
                   Text(context.l10n.today, style: context.text.titleMedium),
                   const SizedBox(height: AppSpacing.sm),

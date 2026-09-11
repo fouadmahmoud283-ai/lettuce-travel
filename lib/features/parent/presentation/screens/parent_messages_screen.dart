@@ -46,7 +46,12 @@ class _AnnouncementsTab extends ConsumerWidget {
         data: (List<Announcement> items) => items.isEmpty
             ? AppEmptyView(message: context.l10n.announcementsEmpty, icon: Icons.campaign_outlined)
             : ListView.separated(
-                padding: const EdgeInsets.all(AppSpacing.md),
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.md,
+                  AppSpacing.md,
+                  AppSpacing.md,
+                  AppSpacing.navBarClearance,
+                ),
                 itemCount: items.length,
                 separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.sm),
                 itemBuilder: (BuildContext context, int index) {
@@ -154,7 +159,14 @@ class _ChatTabState extends ConsumerState<_ChatTab> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(AppSpacing.sm),
+            // Extra bottom space clears the floating shell nav bar, since this
+            // tab has no other scrollable to absorb it (see AppSpacing.navBarClearance).
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.sm,
+              AppSpacing.sm,
+              AppSpacing.sm,
+              AppSpacing.navBarClearance - AppSpacing.md,
+            ),
             child: Row(
               children: <Widget>[
                 Expanded(

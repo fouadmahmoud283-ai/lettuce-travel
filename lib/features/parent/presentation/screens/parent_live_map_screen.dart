@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:lettuce_travel/app/theme/app_spacing.dart';
@@ -79,7 +80,10 @@ class ParentLiveMapScreen extends ConsumerWidget {
                         busPosition: ping?.position,
                         busHeading: ping?.heading ?? 0,
                         passedStopIds: passedStopIds,
-                      ),
+                      ).animate().fadeIn(duration: 380.ms).scale(
+                            begin: const Offset(0.98, 0.98),
+                            end: const Offset(1, 1),
+                          ),
                       const SizedBox(height: AppSpacing.md),
                       if (ping == null)
                         _MapStatusBanner(

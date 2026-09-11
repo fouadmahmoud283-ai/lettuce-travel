@@ -387,6 +387,27 @@ class AppL10nAr extends AppL10n {
   String get adminHeroSubtitle => 'المدارس والحافلات والخطوط وكل من يديرها';
 
   @override
+  String get quickActions => 'إجراءات سريعة';
+
+  @override
+  String get navDashboard => 'الرئيسية';
+
+  @override
+  String get moreTabLabel => 'المزيد';
+
+  @override
+  String get moreSectionOperations => 'العمليات';
+
+  @override
+  String get moreSectionSetup => 'الإعداد';
+
+  @override
+  String get navLive => 'مباشر';
+
+  @override
+  String get navTrips => 'الرحلات';
+
+  @override
   String get dashboardBusesOnRoad => 'حافلات في الطريق';
 
   @override
@@ -515,6 +536,15 @@ class AppL10nAr extends AppL10n {
 
   @override
   String get reportsNoData => 'لا يوجد حضور في هذه الفترة';
+
+  @override
+  String get reportsBreakdownTitle => 'توزيع الحالات';
+
+  @override
+  String get reportsTotalRecords => 'إجمالي السجلات';
+
+  @override
+  String get reportsTrendTitle => 'الاتجاه اليومي';
 
   @override
   String get reportsExport => 'تصدير CSV';

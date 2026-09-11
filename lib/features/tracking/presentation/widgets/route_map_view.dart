@@ -2,9 +2,11 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import 'package:lettuce_travel/app/theme/app_colors.dart';
 import 'package:lettuce_travel/app/theme/app_spacing.dart';
 import 'package:lettuce_travel/core/extensions/context_x.dart';
 import 'package:lettuce_travel/core/models/geo_position.dart';
+import 'package:lettuce_travel/core/widgets/glass_surface.dart';
 import 'package:lettuce_travel/features/schools/domain/entities/route_stop.dart';
 
 /// A schematic route diagram: stops in order, connected by the route line,
@@ -39,8 +41,20 @@ class RouteMapView extends StatelessWidget {
         children: <Widget>[
           AspectRatio(
             aspectRatio: 4 / 3,
-            child: Container(
-              color: scheme.surfaceContainerHighest,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: <Color>[
+                    scheme.surfaceContainerHighest,
+                    Color.alphaBlend(
+                      AppColors.primary.withValues(alpha: 0.06),
+                      scheme.surfaceContainerHighest,
+                    ),
+                  ],
+                ),
+              ),
               child: CustomPaint(
                 painter: _RouteMapPainter(
                   stops: stops,
@@ -59,12 +73,12 @@ class RouteMapView extends StatelessWidget {
           PositionedDirectional(
             top: AppSpacing.sm,
             end: AppSpacing.sm,
-            child: Container(
+            child: GlassSurface(
+              blurSigma: 8,
+              tintColor: scheme.surface,
+              tintOpacity: 0.7,
+              borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: 2),
-              decoration: BoxDecoration(
-                color: scheme.surface.withValues(alpha: 0.85),
-                borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-              ),
               child: Text(context.l10n.schematicMapLabel, style: context.text.labelSmall),
             ),
           ),

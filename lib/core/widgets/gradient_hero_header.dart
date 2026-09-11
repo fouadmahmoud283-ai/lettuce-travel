@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 
 import 'package:lettuce_travel/app/theme/app_colors.dart';
 import 'package:lettuce_travel/app/theme/app_spacing.dart';
+import 'package:lettuce_travel/core/widgets/glass_surface.dart';
 
-/// The dark-teal gradient card used at the top of the admin and parent home
-/// screens: a title, an optional subtitle, a trailing icon, and a slot for a
-/// row of metrics underneath.
+/// The gradient-mesh hero card used at the top of every role's home screen: a
+/// title, an optional subtitle, a trailing icon, and a row of frosted-glass
+/// metric tiles underneath.
 ///
-/// Both screens used to hand-build this gradient independently; centralising
-/// it here means a change to the brand gradient only has to happen once, and
-/// any future "home" screen (e.g. a school-level admin dashboard) starts from
-/// the same visual language for free.
+/// Centralising this means the mesh gradient and glass treatment only have to
+/// be tuned once, and any future "home" screen starts from the same premium
+/// visual language for free.
 class GradientHeroHeader extends StatelessWidget {
   const GradientHeroHeader({
     required this.title,
@@ -24,83 +24,95 @@ class GradientHeroHeader extends StatelessWidget {
   final String? subtitle;
   final IconData? trailingIcon;
 
-  /// An optional row of [HeroMetric]s shown under the title.
+  /// An optional row of [HeroMetric]s shown under the title, each rendered as
+  /// a frosted-glass tile floating over the gradient.
   final List<HeroMetric>? metrics;
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme scheme = Theme.of(context).colorScheme;
     final TextTheme text = Theme.of(context).textTheme;
 
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: <Color>[AppColors.primaryDark, scheme.primary],
-          begin: AlignmentDirectional.topStart,
-          end: AlignmentDirectional.bottomEnd,
-        ),
-        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            color: AppColors.primaryDark.withValues(alpha: 0.28),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+      child: Stack(
+        children: <Widget>[
+          // Positioned.fill is required here: MeshGradientBackground's own
+          // Stack has only Positioned children (the glow circles), so with no
+          // non-positioned child of its own it would otherwise collapse to
+          // zero size instead of filling behind the content below.
+          Positioned.fill(
+            child: MeshGradientBackground(
+              colors: AppColors.heroMeshGradient,
+              borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+            ),
           ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: Text(
-                    title,
-                    style: text.headlineSmall?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                  color: AppColors.meshTeal.withValues(alpha: 0.35),
+                  blurRadius: 24,
+                  offset: const Offset(0, 10),
                 ),
-                if (trailingIcon != null)
-                  Container(
-                    padding: const EdgeInsets.all(AppSpacing.sm),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.14),
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-                    ),
-                    child: Icon(trailingIcon, color: AppColors.secondary, size: 26),
-                  ),
               ],
             ),
-            if (subtitle != null) ...<Widget>[
-              const SizedBox(height: AppSpacing.xs),
-              Text(
-                subtitle!,
-                style: text.bodyMedium?.copyWith(
-                  color: Colors.white.withValues(alpha: 0.78),
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: text.headlineSmall?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                    if (trailingIcon != null)
+                      GlassSurface(
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                        blurSigma: 12,
+                        padding: const EdgeInsets.all(AppSpacing.sm),
+                        child: Icon(trailingIcon, color: Colors.white, size: 26),
+                      ),
+                  ],
                 ),
-              ),
-            ],
-            if (metrics != null && metrics!.isNotEmpty) ...<Widget>[
-              const SizedBox(height: AppSpacing.lg),
-              Row(
-                children: <Widget>[
-                  for (final HeroMetric metric in metrics!)
-                    Expanded(child: metric),
+                if (subtitle != null) ...<Widget>[
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    subtitle!,
+                    style: text.bodyMedium?.copyWith(
+                      color: Colors.white.withValues(alpha: 0.82),
+                    ),
+                  ),
                 ],
-              ),
-            ],
-          ],
-        ),
+                if (metrics != null && metrics!.isNotEmpty) ...<Widget>[
+                  const SizedBox(height: AppSpacing.lg),
+                  Row(
+                    children: <Widget>[
+                      for (int i = 0; i < metrics!.length; i++) ...<Widget>[
+                        if (i > 0) const SizedBox(width: AppSpacing.sm),
+                        Expanded(child: metrics![i]),
+                      ],
+                    ],
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-/// One glanceable number inside a [GradientHeroHeader]'s metric row.
+/// One glanceable metric inside a [GradientHeroHeader], rendered as a small
+/// frosted-glass tile so it reads as a distinct floating element rather than
+/// bare text over the gradient.
 class HeroMetric extends StatelessWidget {
   const HeroMetric({
     required this.value,
@@ -114,26 +126,35 @@ class HeroMetric extends StatelessWidget {
   final IconData icon;
 
   @override
-  Widget build(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Icon(icon, color: Colors.white.withValues(alpha: 0.82), size: 18),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            value,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w800,
-                ),
-          ),
-          Text(
-            label,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  color: Colors.white.withValues(alpha: 0.78),
-                ),
-          ),
-        ],
+  Widget build(BuildContext context) => GlassSurface(
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+        blurSigma: 10,
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.sm,
+          vertical: AppSpacing.sm,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Icon(icon, color: Colors.white.withValues(alpha: 0.9), size: 16),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              value,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w800,
+                  ),
+            ),
+            Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: Colors.white.withValues(alpha: 0.78),
+                  ),
+            ),
+          ],
+        ),
       );
 }

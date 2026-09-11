@@ -390,6 +390,27 @@ class AppL10nEn extends AppL10n {
       'Schools, buses, routes and everyone who keeps them running';
 
   @override
+  String get quickActions => 'Quick actions';
+
+  @override
+  String get navDashboard => 'Dashboard';
+
+  @override
+  String get moreTabLabel => 'More';
+
+  @override
+  String get moreSectionOperations => 'Operations';
+
+  @override
+  String get moreSectionSetup => 'Setup';
+
+  @override
+  String get navLive => 'Live';
+
+  @override
+  String get navTrips => 'Trips';
+
+  @override
   String get dashboardBusesOnRoad => 'Buses on the road';
 
   @override
@@ -518,6 +539,15 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get reportsNoData => 'No attendance in this range';
+
+  @override
+  String get reportsBreakdownTitle => 'Status breakdown';
+
+  @override
+  String get reportsTotalRecords => 'total records';
+
+  @override
+  String get reportsTrendTitle => 'Daily trend';
 
   @override
   String get reportsExport => 'Export CSV';

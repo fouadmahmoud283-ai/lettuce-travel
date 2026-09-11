@@ -21,29 +21,22 @@ class ParentHomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final AsyncValue<List<ParentChildSummary>> children = ref.watch(parentChildrenProvider);
 
+    // No AppBar: the gradient hero header below already carries the title,
+    // and Messages / Settings are now tabs on the parent shell's bottom nav
+    // rather than actions buried in an app bar.
     return Scaffold(
-      appBar: AppBar(
-        title: Text(context.l10n.myChildren),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.campaign_outlined),
-            tooltip: context.l10n.announcements,
-            onPressed: () => context.push(RoutePaths.parentMessages),
-          ),
-          IconButton(
-            icon: const Icon(Icons.settings_outlined),
-            tooltip: context.l10n.settings,
-            onPressed: () => context.push(RoutePaths.settings),
-          ),
-        ],
-      ),
       body: SafeArea(
         child: AsyncValueView<List<ParentChildSummary>>(
           value: children,
           data: (List<ParentChildSummary> summaries) => summaries.isEmpty
               ? AppEmptyView(message: context.l10n.noData, icon: Icons.family_restroom_rounded)
               : ListView.separated(
-                  padding: const EdgeInsets.all(AppSpacing.md),
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.md,
+                    AppSpacing.md,
+                    AppSpacing.md,
+                    AppSpacing.navBarClearance,
+                  ),
                   itemCount: summaries.length + 1,
                   separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.md),
                   itemBuilder: (BuildContext context, int index) {
@@ -65,18 +58,24 @@ class _OverviewHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final int onBoard = summaries
-        .where((ParentChildSummary summary) =>
-            summary.todayRecord?.status == AttendanceStatus.onBoard,)
+        .where(
+          (ParentChildSummary summary) =>
+              summary.todayRecord?.status == AttendanceStatus.onBoard,
+        )
         .length;
     final int droppedOff = summaries
-        .where((ParentChildSummary summary) =>
-            summary.todayRecord?.status == AttendanceStatus.droppedOff,)
+        .where(
+          (ParentChildSummary summary) =>
+              summary.todayRecord?.status == AttendanceStatus.droppedOff,
+        )
         .length;
     final int waiting = summaries
-      .where((ParentChildSummary summary) =>
-        (summary.todayRecord?.status ?? AttendanceStatus.pending) ==
-        AttendanceStatus.pending,)
-      .length;
+        .where(
+          (ParentChildSummary summary) =>
+              (summary.todayRecord?.status ?? AttendanceStatus.pending) ==
+              AttendanceStatus.pending,
+        )
+        .length;
     return GradientHeroHeader(
       title: context.l10n.today,
       subtitle: context.l10n.myChildren,

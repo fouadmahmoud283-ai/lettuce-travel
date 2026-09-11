@@ -17,4 +17,11 @@ abstract final class AppSpacing {
   static const double minTouchTarget = 56;
   static const double rosterRowHeight = 88;
   static const double avatarSize = 48;
+
+  /// Extra bottom padding every tab-root screen under [RoleShellScaffold]
+  /// must add to its outermost scrollable, since that shell renders the body
+  /// behind a floating translucent bottom nav (`extendBody: true`) rather
+  /// than reserving solid space for it. Screens reached by a `push` (detail
+  /// screens, sheets) do not need this — only the four/three/two tab roots.
+  static const double navBarClearance = 104;
 }
